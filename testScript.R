@@ -1,19 +1,38 @@
-library(readr)
 library(dplyr)
-ees <- readr::read_csv("./data/light-sources/EES_380nm-780nm_1nm.csv")
-as <- readr::read_csv("./data/spectral-sensitivity/cvrl.org_CIE_function_360nm-830nm_1nm.csv")
-as <- as  %>%
-  filter(380 <= wavelength & wavelength <= 780)
+library(data.table)
+
+###
+spd <- fread("./inst/extdata/light-sources/CIE_015_2018_illuminants_300-780_5nm.csv")
+spd$EES <- as.numeric(spd$EES)
+as <- fread("./inst/extdata/spectral-sensitivity/cvrl.org_CIE_function_360nm-830nm_1nm.csv")
+
+# wavelength output for interpolation
+wl_out <- seq(380,780,5)
+
+# linear interpolation of spd to 380-780_5nm
+spd <- interpolate_spectra(spd, method = "fmm")
+plot(spd$wavelength.nm,spd$`Standard illuminant D65`)
+
+# linear interpolate as to 5 nm steps
+as <- interpolate_spectra(as)
+
+
 
 Km <- 683.002 # lm/W
 
-wl <- seq(380,780,1)
+spd <- spd %>% select(-wavelength.nm)
 
-spectrum <- ees$EES
+spectrum <- spd$EES
 V <- as$`CIE 1924 - V(lbd)`
-test <- spectrum * V
+
+# photopic integration
+lightingTrapz <- function(spectrum,wavelength,sensitivity,constant){
+  value <- constant*(pracma::trapz(wavelength,spectrum*sensitivity))
+  return(value)
+}
+
+sapply(spd, lightingTrapz, sensitivity = V, wavelength = wl_out, constant = Km)
 
 
 
 
-Km*(pracma::trapz(wl,spectrum*V))
