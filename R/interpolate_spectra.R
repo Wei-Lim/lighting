@@ -10,9 +10,13 @@
 #'   then the name of the first column from dataframe \code{spectra} will
 #'   chosen as \code{str_wavelength}.
 #' @param method specifies the interpolation method of the functions
-#'   \link[stats]{approx} and \link[stats]{spline}. Default: \code{"linear"}.
-#'   Other choices for \link[stats]{spline} are: \code{"fmm"},
-#'   \code{"periodic"}, \code{"natural"}, \code{"monoH.FC"} and \code{"hyman"}.
+#'   \link[stats]{approx} and \link[stats]{spline}. Default:
+#'   \code{"linear"}. Spline interpolation: \code{"fmm"}, \code{"periodic"},
+#'   \code{"natural"}, \code{"monoH.FC"} and \code{"hyman"}. Sprague
+#'   interpolation after \insertCite{Westland2015}{lighting}: \code{"sprague"}
+#' @param tolerance used for sprague interpolation wrapper to correct numerical
+#'   differentiation errors. Important to calculate the interpolation factor f.
+#'   Default: 1e-14.
 #'
 #' @return returns a dataframe of interpolated spectra in wide table format
 #'   specified by \code{wl_out}.
@@ -25,13 +29,16 @@
 #' wavelength <- seq(380, 780, 5)
 #' planck2700 <- colorscience::emittanceblackbodyPlanck(seq(380, 780, 5), 2700)
 #' planck5000 <- colorscience::emittanceblackbodyPlanck(seq(380, 780, 5), 5000)
+#'
 #' spectra <- data.frame(wavelength, planck2700, planck5000)
 #' interpolate_spectra(spectra, seq(380, 780, 1), method = "linear")
+#' interpolate_spectra(spectra, seq(380, 780, 1), method = "sprague")
 #'
 #' @importFrom data.table setDT
 #' @importFrom data.table setDF
 #' @importFrom data.table melt
 #' @importFrom data.table dcast
+#' @importFrom data.table :=
 #' @importFrom data.table setnames
 #' @importFrom stats approx
 #' @importFrom stats spline
@@ -40,12 +47,14 @@
 #' @importFrom magrittr %>%
 interpolate_spectra <- function(
   spectra,
-  wl_out = seq(380,780,5),
+  wl_out = seq(380, 780, 5),
+  method = "linear",
   str_wavelength = NULL,
-  method = "linear") {
+  tolerance = 1e-14
+  ) {
 
   # defining local variable to suppress note in check()
-  spectrum <- value <- NULL
+  spectrum <- value <- wavelength <- NULL
 
   # defining first column of dataframe as str_wavelength
   if (is.null(str_wavelength)) {
@@ -103,6 +112,55 @@ interpolate_spectra <- function(
       setDF()
   }
 
+  # sprague interpolation wrapper for interpolate_sprague()
+  if (method == "sprague") {
+    wl <- spectra[, eval(var_wl)]
+
+    # checking wavelength range of wl and wl_out
+    chk_wl_min <- abs(min(wl) - min(wl_out))
+    chk_wl_max <- abs(max(wl) - max(wl_out))
+    if (chk_wl_min > tolerance | chk_wl_max > tolerance) {
+      stop("range of wavelength and wavelength_out must be equal. Please check
+           your inputs!")
+    }
+
+    # checking if wavelength array ist equidistant
+    chk_diff <- abs(min(diff(wl)) - max(diff(wl)))
+    if (chk_diff > tolerance) {
+      stop("wavelength values are not equidistant.")
+    } else {
+      # correcting numerical difference error
+      x_diff <- unique(signif(diff(wl), 1))
+    }
+    # checking if wavelength array ist equidistant
+    chk_diff <- abs(min(diff(wl_out)) - max(diff(wl_out)))
+    if (chk_diff > tolerance) {
+      stop("wavelength_out values are not equidistant.")
+    } else {
+      # correcting numerical difference error
+      x_out_diff <- unique(signif(diff(wl_out), 1))
+    }
+
+    f <- x_diff / x_out_diff # calculation of interpolation factor
+
+    spectra_interpolated <- spectra_long[
+      ,
+      interpolate_sprague(y = value, f),
+      by = spectrum
+    ]
+
+    spectra_interpolated <- spectra_interpolated[
+      ,
+      wavelength := wl_out,
+      by = spectrum
+    ] %>%
+      setnames(old = "wavelength", new = str_wavelength) %>%
+      dcast(
+        as.formula(paste(str_wavelength, "~", "spectrum")),
+        value.var = "V1"
+      ) %>%
+      setDF()
+  }
 
   return(spectra_interpolated)
 }
