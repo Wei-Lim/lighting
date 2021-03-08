@@ -28,21 +28,24 @@ compute_lighting <- function(
                 )
   mat <- rbind(mat, E_v)
 
-  # CIE colorimetric values VORLÄUFIG wird durch CCT ersetzt
+  # Correlated colour temperatur, xyzXYZ-CIE-1931 and u'v'-CIE-UCS-1976
   R <- 1
   cmf2 <- select(ssf$cvrl.org, c(x_cmf_2, y_cmf_2, z_cmf_2))
-  CIE1931 <- sapply(spectra,
-                    compute_XYZ_CIE1931,
-                    wavelength = wl,
+  df_cct <- sapply(spd,
+                    compute_CCT,
+                    wavelength = wl_out,
                     cmf2 = cmf2,
                     K = Km,
                     R = R
                     ) %>%
     unlist() %>%
-    matrix(nrow = 6, byrow = TRUE)
-  rownames(CIE1931) <- c("x_2", "y_2", "z_2", "X_2", "Y_2", "Z_2")
+    matrix(nrow = 9)
+  rownames(df_cct) <- c("CCT",
+                    "x_2", "y_2", "z_2", "X_2", "Y_2", "Z_2",
+                    "u_prime", "v_prime")
+  mat <- rbind(mat, df_cct)
 
-  mat <- rbind(mat, CIE1931)
+  #
 
   df <- data.frame(t(mat))
 
