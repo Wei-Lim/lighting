@@ -47,6 +47,5 @@ integrate_spectrum <- function(
   cb <- (y[n]-y[n-1]) / h
 
   value <- constant * (trapz(x, y) - h^2/12 * (cb - ca))
-
   return(value)
 }
