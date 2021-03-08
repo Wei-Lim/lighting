@@ -2,7 +2,7 @@
 % Please edit documentation in R/interpolate_spectra.R
 \name{interpolate_spectra}
 \alias{interpolate_spectra}
-\title{Interpolates a dataframe of spectra with a wavelength column}
+\title{Interpolates a dataframe of spectra with a wavelength column.}
 \usage{
 interpolate_spectra(
   spectra,
@@ -16,9 +16,9 @@ interpolate_spectra(
 \item{spectra}{is a dataframe of spectra in wide table format including
 a wavelength column in nm.}
 
-\item{wl_out}{defines the output wavelength range and steps in nm for
+\item{wl_out}{defines the output wavelength range and interval in nm for
 interpolation.
-Default: \code{wl_out = seq(380,780,5)}}
+Default: \code{wl_out = seq(380, 780, 5)}}
 
 \item{method}{specifies the interpolation method of the functions
 \link[stats]{approx} and \link[stats]{spline}. Default:
@@ -40,7 +40,11 @@ returns a dataframe of interpolated spectra in wide table format
   specified by \code{wl_out}.
 }
 \description{
-Interpolates a dataframe of spectra with a wavelength column
+Description
+}
+\details{
+In Details - Not tested for wavelength interval < 1 nm.
+Linear interpolating: extrapolation results into 0 values.
 }
 \examples{
 # Create spectrum planckian radiator using black body temperature in K
@@ -51,6 +55,7 @@ planck5000 <- colorscience::emittanceblackbodyPlanck(seq(380, 780, 5), 5000)
 spectra <- data.frame(wavelength, planck2700, planck5000)
 interpolate_spectra(spectra, seq(380, 780, 1), method = "linear")
 interpolate_spectra(spectra, seq(380, 780, 1), method = "sprague")
+interpolate_spectra(spectra, seq(400, 700, 1), method = "sprague")
 
 }
 \author{

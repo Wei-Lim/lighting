@@ -1,10 +1,15 @@
-#' Interpolates a dataframe of spectra with a wavelength column
+#' Interpolates a dataframe of spectra with a wavelength column.
+#'
+#' Description
+#'
+#' In Details - Not tested for wavelength interval < 1 nm.
+#' Linear interpolating: extrapolation results into 0 values.
 #'
 #' @param spectra is a dataframe of spectra in wide table format including
 #'   a wavelength column in nm.
-#' @param wl_out defines the output wavelength range and steps in nm for
+#' @param wl_out defines the output wavelength range and interval in nm for
 #'   interpolation.
-#'   Default: \code{wl_out = seq(380,780,5)}
+#'   Default: \code{wl_out = seq(380, 780, 5)}
 #' @param str_wavelength Define name of wavelength column in \code{spectra}
 #'   dataframe. Default: \code{str_wavelength = NULL}. If entry is \code{NULL},
 #'   then the name of the first column from dataframe \code{spectra} will
@@ -33,6 +38,7 @@
 #' spectra <- data.frame(wavelength, planck2700, planck5000)
 #' interpolate_spectra(spectra, seq(380, 780, 1), method = "linear")
 #' interpolate_spectra(spectra, seq(380, 780, 1), method = "sprague")
+#' interpolate_spectra(spectra, seq(400, 700, 1), method = "sprague")
 #'
 #' @importFrom data.table setDT
 #' @importFrom data.table setDF
@@ -45,6 +51,7 @@
 #' @importFrom stats as.formula
 #' @importFrom stats as.formula
 #' @importFrom magrittr %>%
+#' @importFrom dplyr filter
 interpolate_spectra <- function(
   spectra,
   wl_out = seq(380, 780, 5),
@@ -76,7 +83,14 @@ interpolate_spectra <- function(
   if (method == "linear") {
     spectra_interpolated <- spectra_long[
       ,
-      approx(x = eval(var_wl), y = value, xout = wl_out, method = method),
+      approx(
+        x = eval(var_wl),
+        y = value,
+        xout = wl_out,
+        method = method,
+        yleft = 0,
+        yright = 0
+        ),
       by = spectrum
     ] %>%
       setnames(
@@ -114,52 +128,63 @@ interpolate_spectra <- function(
 
   # sprague interpolation wrapper for interpolate_sprague()
   if (method == "sprague") {
+
     wl <- spectra[, eval(var_wl)]
 
-    # checking wavelength range of wl and wl_out
-    chk_wl_min <- abs(min(wl) - min(wl_out))
-    chk_wl_max <- abs(max(wl) - max(wl_out))
-    if (chk_wl_min > tolerance | chk_wl_max > tolerance) {
-      stop("range of wavelength and wavelength_out must be equal. Please check
-           your inputs!")
+    # checking wl_output range
+    if (min(wl) > min(wl_out) | max(wl) < max(wl_out)) {
+      stop("No extrapolation with Sprague method. Check wl_out.")
     }
 
     # checking if wavelength array ist equidistant
     chk_diff <- abs(min(diff(wl)) - max(diff(wl)))
     if (chk_diff > tolerance) {
-      stop("wavelength values are not equidistant.")
+      stop("Wavelength values are not equidistant.")
     } else {
       # correcting numerical difference error
-      x_diff <- unique(signif(diff(wl), 1))
+      wl_diff <- unique(signif(diff(wl), 1))
     }
     # checking if wavelength array ist equidistant
     chk_diff <- abs(min(diff(wl_out)) - max(diff(wl_out)))
     if (chk_diff > tolerance) {
-      stop("wavelength_out values are not equidistant.")
+      stop("Wavelength_out values are not equidistant.")
     } else {
       # correcting numerical difference error
-      x_out_diff <- unique(signif(diff(wl_out), 1))
+      wl_out_diff <- unique(signif(diff(wl_out), 1))
     }
 
-    f <- x_diff / x_out_diff # calculation of interpolation factor
+    f <- wl_diff / wl_out_diff # calculation of interpolation factor
 
-    spectra_interpolated <- spectra_long[
-      ,
-      interpolate_sprague(y = value, f),
-      by = spectrum
-    ]
+    if (f != 1) {
+      spectra_interpolated_long <- spectra_long[
+        ,
+        interpolate_sprague(y = value, f),
+        by = spectrum
+      ]
 
-    spectra_interpolated <- spectra_interpolated[
-      ,
-      wavelength := wl_out,
-      by = spectrum
-    ] %>%
-      setnames(old = "wavelength", new = str_wavelength) %>%
-      dcast(
-        as.formula(paste(str_wavelength, "~", "spectrum")),
-        value.var = "V1"
-      ) %>%
-      setDF()
+      wl_sprague <- seq(min(wl), max(wl), wl_diff / f)
+
+      spectra_interpolated <- spectra_interpolated_long[
+        ,
+        wavelength := wl_sprague,
+        by = spectrum
+      ] %>%
+        setnames(old = "wavelength", new = str_wavelength) %>%
+        dcast(
+          as.formula(paste(str_wavelength, "~", "spectrum")),
+          value.var = "V1"
+        ) %>%
+        setDF() %>%
+        filter(min(wl_out) <= eval(var_wl) & eval(var_wl) <= max(wl_out))
+    } else {
+      spectra_interpolated <- spectra_long %>%
+        dcast(
+          as.formula(paste(str_wavelength, "~", "spectrum")),
+          value.var = "value"
+        ) %>%
+        setDF() %>%
+        filter(min(wl_out) <= eval(var_wl) & eval(var_wl) <= max(wl_out))
+    }
   }
 
   return(spectra_interpolated)

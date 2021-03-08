@@ -26,13 +26,7 @@ test_that("interpolate_spectra() interpolates spectra data", {
   # testing sprague wrapper
   expect_error(
     interpolate_spectra(df5, seq(380, 781, 1), method = "sprague"),
-    label = "range of wavelength and wavelength_out must be equal. Please
-             check your inputs!"
-    )
-  expect_error(
-    interpolate_spectra(df5, seq(381, 780, 1), method = "sprague"),
-    label = "range of wavelength and wavelength_out must be equal. Please
-             check your inputs!"
+    label = "No extrapolation with Sprague method. Check wl_out."
     )
   expect_error(
     interpolate_spectra(df5, seq(380, 780, 2), method = "sprague"),

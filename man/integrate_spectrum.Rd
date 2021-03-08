@@ -2,20 +2,42 @@
 % Please edit documentation in R/integrate_spectrum.R
 \name{integrate_spectrum}
 \alias{integrate_spectrum}
-\title{Integrates a dataframe of spectra}
+\title{Integrates numerical a dataframe of spectra}
 \usage{
 integrate_spectrum(spectrum, wavelength, sensitivity = 1, constant = 1)
 }
 \arguments{
-\item{spectra}{}
+\item{spectrum}{\mjeqn{E_e(\lambda)}{ascii} is the spectrum to be integrated.}
+
+\item{wavelength}{\mjeqn{\lambda}{ascii} defines the integration wavelength
+range.}
+
+\item{sensitivity}{\mjeqn{s(\lambda)}{ascii} defines the sensitivity
+function, which is multiplied with the spectrum \mjeqn{E_e(\lambda)}{ascii}
+before integration. Default: 1.}
+
+\item{constant}{\mjeqn{K}{ascii} is a constant. Mostly used for
+standardisation. Default: 1.}
 }
 \value{
-
+an integrated value after the formula in the description.
 }
 \description{
-Typical integration to compute lighting values
-\deqn{E = K \cdot \int E_\text{e}(\lambda) \cdot s(\lambda) d\lambda}.
+\loadmathjax
+Typical numerical integration of spectrum to compute lighting values
+\mjeqn{LV}{ascii} using the trapezoidal method. Formula:
+\mjdeqn{LV = K \cdot \int E_e(\lambda) s(\lambda) d\lambda
+}{ascii}
 }
 \examples{
+library(dplyr)
+# calculating photopic quantitiy illuminance
+K_m <- 683.002 # in lm/W constant for self-luminous object
+ssf <- cvrl.org \%>\%
+  filter(380 <= nm & nm <= 780)
+V_pho <- ssf$V_pho
+wl <- ees <- seq(380, 780, 1)
+ees[] <- 1
+integrate_spectrum(ees, wl, V_pho, K_m)
 
 }

@@ -7,7 +7,7 @@
 interpolate_sprague(y, f)
 }
 \arguments{
-\item{y}{numeric spectral data y giving to be interpolated}
+\item{y}{numeric spectral data y input to be interpolated}
 
 \item{f}{interpolation factor. Doubled sampling rate (f = 2).}
 }
@@ -19,7 +19,7 @@ Perform sprague interpolation of given spectrum data points and returning a
 list of points obtained by interpolation. The original Matlab code by
 \insertCite{Westland2012}{lighting} was adapted to R. Sampling rate must be
 at least doubled, i. e. f \eqn{\ge}2. And f must be nominal (2, 3, ...).
-For more insight in the interpolation method see
+For more insight of the sprague interpolation method see
 \insertCite{Westland2015}{lighting}.
 }
 \examples{

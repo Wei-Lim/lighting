@@ -12,13 +12,18 @@ LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
     testthat (>= 3.0.0),
-    colorscience,
+    colorscience
 Config/testthat/edition: 3
 Imports: 
     magrittr,
     data.table,
     stats,
     pracma,
-    Rdpack
+    Rdpack,
+    dplyr,
+    mathjaxr
 RdMacros:
-    Rdpack
+    Rdpack,
+    mathjaxr
+Depends: 
+    R (>= 2.10)
