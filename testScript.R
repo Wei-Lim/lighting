@@ -2,6 +2,7 @@
 library(dplyr)
 library(data.table)
 library(tidyverse)
+library(microbenchmark)
 #library(tictoc)
 
 ###
@@ -24,22 +25,75 @@ method <- "linear"
 str_wavelength <- "wavelength.nm"
 wl <- spectra[[str_wavelength]]
 
-# wrapper function
-myfun <- function(x, y, xout, method) {
-  l <- approx(x, y, xout, method, yleft = 0, yright = 0)
+long_fun <- function(spectra) {
+
+  method <- "linear"
+  str_wavelength <- colnames(spectra)[1]
+  wl <- spectra[[str_wavelength]]
+
+  spectra_long <- melt(
+    setDT(spectra),
+    id.vars = str_wavelength,
+    variable.name = "spectrum",
+    value.name = "value"
+  )
+
+  var_wl <- as.name(str_wavelength)
+
+  spectra_interpolated <- spectra_long[
+    ,
+    approx(
+      x = eval(var_wl),
+      y = value,
+      xout = wl_out,
+      method = method,
+      yleft = 0,
+      yright = 0
+    ),
+    by = spectrum
+  ] %>%
+    setnames(
+      old = c("x", "y"),
+      new = c(str_wavelength, "value")
+    ) %>%
+    dcast(
+      as.formula(paste(str_wavelength, "~", "spectrum")),
+      value.var = "value"
+    ) %>%
+    setDF()
+  return(spectra_interpolated)
+}
+
+
+
+method <- "linear"
+str_wavelength <- "wavelength.nm"
+wl <- spectra[[str_wavelength]]
+
+map_approx <- function(x, y, xout, method, yleft, yright) {
+  l <- approx(x, y, xout, method, yleft, yright)
   res <- l$y
   return(res)
 }
 
-
 test <- spectra %>%
   select(-as.name(str_wavelength)) %>%
-  map_dfc(
-    myfun,
+  map_df(
+    map_spline,
     x = wl,
     xout = wl_out,
-    method = method
-    )
+    method = "fmm"
+  )
+test <- cbind(wl_out, test)
 
-approx(x = wl, y = spectra$EES, xout= wl_out)
+# wrapper function
+
+# microbenchmark
+mbm <- microbenchmark(
+  map_fun(spectra),
+  long_fun(spectra),
+  times = 500
+)
+ggplot2::autoplot(mbm)
+
 

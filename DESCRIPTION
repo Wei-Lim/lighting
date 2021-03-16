@@ -16,12 +16,12 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     magrittr,
-    data.table,
     stats,
     pracma,
     Rdpack,
     dplyr,
-    mathjaxr
+    mathjaxr,
+    purrr
 RdMacros:
     Rdpack,
     mathjaxr

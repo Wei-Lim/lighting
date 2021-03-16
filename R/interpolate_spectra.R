@@ -40,18 +40,13 @@
 #' interpolate_spectra(spectra, seq(380, 780, 1), method = "sprague")
 #' interpolate_spectra(spectra, seq(400, 700, 1), method = "sprague")
 #'
-#' @importFrom data.table setDT
-#' @importFrom data.table setDF
-#' @importFrom data.table melt
-#' @importFrom data.table dcast
-#' @importFrom data.table :=
-#' @importFrom data.table setnames
 #' @importFrom stats approx
 #' @importFrom stats spline
-#' @importFrom stats as.formula
-#' @importFrom stats as.formula
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter
+#' @importFrom dplyr select
+#' @importFrom dplyr rename
+#' @importFrom purrr map_df
 interpolate_spectra <- function(
   spectra,
   wl_out = seq(380, 780, 5),
@@ -60,48 +55,30 @@ interpolate_spectra <- function(
   tolerance = 1e-14
   ) {
 
-  # defining local variable to suppress note in check()
-  spectrum <- value <- wavelength <- NULL
 
   # defining first column of dataframe as str_wavelength
   if (is.null(str_wavelength)) {
     str_wavelength <- colnames(spectra)[1]
   }
-
-  # convert wide table spectra to long table
-  spectra_long <- melt(
-    setDT(spectra),
-    id.vars = str_wavelength,
-    variable.name = "spectrum",
-    value.name = "value"
-  )
+  wl <- spectra[[str_wavelength]]
 
   # change string to variable name
   var_wl <- as.name(str_wavelength)
 
   # spline interpolation using stats::spline()
   if (method == "linear") {
-    spectra_interpolated <- spectra_long[
-      ,
-      approx(
-        x = eval(var_wl),
-        y = value,
+    spectra_interpolated <- spectra %>%
+      select(-var_wl) %>%
+      map_df(
+        map_approx,
+        x = wl,
         xout = wl_out,
         method = method,
         yleft = 0,
         yright = 0
-        ),
-      by = spectrum
-    ] %>%
-      setnames(
-        old = c("x", "y"),
-        new = c(str_wavelength, "value")
-      ) %>%
-      dcast(
-        as.formula(paste(str_wavelength, "~", "spectrum")),
-        value.var = "value"
-      ) %>%
-      setDF()
+      )
+    spectra_interpolated <- cbind(wl_out, spectra_interpolated) %>%
+      rename(!!str_wavelength := wl_out)
   }
 
   # spline interpolation using stats::spline()
@@ -110,26 +87,20 @@ interpolate_spectra <- function(
       method == "natural"  |
       method == "monoH.FC" |
       method == "hyman") {
-    spectra_interpolated <- spectra_long[
-      ,
-      spline(x = eval(var_wl), y = value, xout = wl_out, method = method),
-      by = spectrum
-    ] %>%
-      setnames(
-        old = c("x", "y"),
-        new = c(str_wavelength, "value")
-      ) %>%
-      dcast(
-        as.formula(paste(str_wavelength, "~", "spectrum")),
-        value.var = "value"
-      ) %>%
-      setDF()
+    spectra_interpolated <- spectra %>%
+      select(-var_wl) %>%
+      map_df(
+        map_spline,
+        x = wl,
+        xout = wl_out,
+        method = method
+      )
+    spectra_interpolated <- cbind(wl_out, spectra_interpolated) %>%
+      rename(!!str_wavelength := wl_out)
   }
 
   # sprague interpolation wrapper for interpolate_sprague()
   if (method == "sprague") {
-
-    wl <- spectra[, eval(var_wl)]
 
     # checking wl_output range
     if (min(wl) > min(wl_out) | max(wl) < max(wl_out)) {
@@ -156,33 +127,17 @@ interpolate_spectra <- function(
     f <- wl_diff / wl_out_diff # calculation of interpolation factor
 
     if (f != 1) {
-      spectra_interpolated_long <- spectra_long[
-        ,
-        interpolate_sprague(y = value, f),
-        by = spectrum
-      ]
-
-      wl_sprague <- seq(min(wl), max(wl), wl_diff / f)
-
-      spectra_interpolated <- spectra_interpolated_long[
-        ,
-        wavelength := wl_sprague,
-        by = spectrum
-      ] %>%
-        setnames(old = "wavelength", new = str_wavelength) %>%
-        dcast(
-          as.formula(paste(str_wavelength, "~", "spectrum")),
-          value.var = "V1"
-        ) %>%
-        setDF() %>%
-        filter(min(wl_out) <= eval(var_wl) & eval(var_wl) <= max(wl_out))
+      spectra_interpolated <- spectra %>%
+        filter(min(wl_out) <= eval(var_wl) & eval(var_wl) <= max(wl_out)) %>%
+        select(-var_wl) %>%
+        map_df(
+          interpolate_sprague,
+          f = f
+        )
+      spectra_interpolated <- cbind(wl_out, spectra_interpolated) %>%
+        rename(!!str_wavelength := wl_out)
     } else {
-      spectra_interpolated <- spectra_long %>%
-        dcast(
-          as.formula(paste(str_wavelength, "~", "spectrum")),
-          value.var = "value"
-        ) %>%
-        setDF() %>%
+      spectra_interpolated <- spectra %>%
         filter(min(wl_out) <= eval(var_wl) & eval(var_wl) <= max(wl_out))
     }
   }
