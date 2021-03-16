@@ -45,7 +45,6 @@ compute_lighting <- function(
                     "u_prime", "v_prime")
   mat <- rbind(mat, df_cct)
 
-  #
 
   df <- data.frame(t(mat))
 
