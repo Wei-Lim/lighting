@@ -16,7 +16,7 @@
 #' interpolated to the specified wavelength range and interval; extrapolated
 #' values are returned with 0. Wavelength interval cannot be smaller than 1.
 #'
-#' @param wl_step defines the wavelength interval. Wavelength range
+#' @param wl_out defines the wavelength interval. Wavelength range
 #' (380-780)nm.
 #'
 #' @return list of sensitivity functions for computing lighting values
@@ -37,6 +37,7 @@
 sensitivity_functions <- function(
   wl_out = seq(380, 780, 1)
   ) {
+
 
   df_cie1995_13.3 <- cie1995_13.3
   df_cie2018_015 <- cie2018_015

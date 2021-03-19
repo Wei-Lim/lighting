@@ -47,6 +47,7 @@
 #' @importFrom dplyr select
 #' @importFrom dplyr rename
 #' @importFrom purrr map_df
+#' @importFrom rlang :=
 interpolate_spectra <- function(
   spectra,
   wl_out = seq(380, 780, 5),

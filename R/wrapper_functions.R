@@ -1,5 +1,3 @@
-
-
 map_approx <- function(x, y, xout, method, yleft, yright) {
   l <- approx(x, y, xout, method, yleft, yright)
   res <- l$y

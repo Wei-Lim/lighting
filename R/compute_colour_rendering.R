@@ -1,9 +1,32 @@
-#' Title
+#' Defines current colour distance of light source to planckian radiator
 #'
-#' @param u
-#' @param v
+#' @param current_CCT current correlated colour temperature
+#' @param wavelength array in nm
+#' @param u_prime light source colour chromaticity CIE-UCS-1976
+#' @param v_prime light source colour chromaticity CIE-UCS-1976
+#' @param cmf2 spectral sensitivity of colour matching functions
+#' @param Km luminous efficacy in lm/W
 #'
-#' @NoRd
+#' @noRd
+#'
+find_CCT <- function(current_CCT, wavelength, u_prime, v_prime, cmf2, Km) {
+  spectrum_P <- planck_law(current_CCT, wavelength)
+
+  XYZ_P <- compute_XYZ_CIE1931(spectrum_P, wavelength, cmf2, Km, 1)
+  uv_P <- compute_UCS_CIE1976(XYZ_P$X_2, XYZ_P$Y_2, XYZ_P$Z_2)
+
+  delta_uv <- sqrt((u_prime - uv_P$u_prime)^2 + 4 / 9
+                   * (v_prime - uv_P$v_prime)^2)
+  return(delta_uv)
+}
+
+#' Applying von Kries colour shift transformation
+#'
+#' @param u chromaticty coordinate CIE-UCS-1960
+#' @param v chromaticty coordinate CIE-UCS-1960
+#'
+#' @noRd
+#'
 apply_von_Kries_color_shift <- function(u, v) {
   c = (4 - u - 10 * v) / v
   d = (1.708 * v + 0.404 - 1.481 * u) / v
@@ -11,15 +34,16 @@ apply_von_Kries_color_shift <- function(u, v) {
   return(df)
 }
 
-#' Title
+#' Determine CIE 1964 WUV values
 #'
-#' @param Y
-#' @param u
-#' @param v
-#' @param u_r
-#' @param v_r
+#' @param Y tristimulus value CIE-XYZ-1931
+#' @param u test light source chromaticty coordinate CIE-UCS-1960
+#' @param v test light source chromaticty coordinate CIE-UCS-1960
+#' @param u_r reference light source chromaticty coordinate CIE-UCS-1960
+#' @param v_r reference light source chromaticty coordinate CIE-UCS-1960
 #'
-#' @NoRd
+#' @noRd
+#'
 compute_WUV_CIE1964 <- function(Y, u, v, u_r, v_r) {
   W <- 25 * Y^(1 / 3) - 17
   U <- 13 * W * (u - u_r)
@@ -28,25 +52,33 @@ compute_WUV_CIE1964 <- function(Y, u, v, u_r, v_r) {
   return(df)
 }
 
-#' Title
+#' Computes CCT, xyzXYZ, uv and colour rendering indexes
 #'
-#' @param spectrum
-#' @param wavelength
-#' @param cmf2
-#' @param Km
-#' @param R
-#' @param S
+#' @param spectrum spectral power distribution of light source per wavelength
+#' @param wavelength array in nm corresponding to spectrum
+#' @param cmf2 spectral sensitivity of CIE 2° colour matching functions
+#' @param Km luminous efficacy in lm/W
+#' @param R spectral reflection factor
+#' @param S daylight components S_0, S_1 and S_2
+#' @param TCS CIE test color samples 1 - 14 CIE 1995
 #'
-#' @NoRd
+#' @noRd
+#'
+#' @importFrom stats optimize
+#' @importFrom dplyr rename_with
 compute_colour_rendering <- function(
   spectrum,
   wavelength,
   cmf2,
   Km = 683.002,
   R = 1,
-  S
+  S,
+  TCS
 ) {
+  # define some local variables
+  nm <- u_prime <- v_prime <- NULL
 
+  # step 1 defining CCT
   xyzXYZ <- compute_XYZ_CIE1931(spectrum, wavelength, cmf2, Km, R)
   uv <- compute_UCS_CIE1976(xyzXYZ$X_2, xyzXYZ$Y_2, xyzXYZ$Z_2)
 
@@ -66,8 +98,6 @@ compute_colour_rendering <- function(
     interval = c(CCTmin, CCTmax)
   )
   CCT <- result$minimum
-  CCT <- 5455.877400278919
-  CCT <- 5455
 
   # compute color rendering index after ASSIST recommends 2010
   ## step 2
@@ -157,8 +187,17 @@ compute_colour_rendering <- function(
 
   R_a <- sum(R_i[1:8]) / 8
 
-  df <- data.frame(R_a, t(R_i)) %>%
+  # Creating dataframes
+  df_Ra <- data.frame(R_a, t(R_i)) %>%
     rename_with(~ c("R_a", "R_1", "R_2", "R_3", "R_4", "R_5", "R_6", "R_7",
                     "R_8", "R_9", "R_10", "R_11", "R_12", "R_13", "R_14"))
+
+  df <- data.frame(CCT) %>%
+    cbind(df_Ra) %>%
+    cbind(xyzXYZ) %>%
+    cbind(uv)
+
   return(df)
 }
+
+

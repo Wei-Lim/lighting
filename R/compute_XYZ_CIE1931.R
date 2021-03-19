@@ -1,12 +1,12 @@
-#' Compare x to 1
+#' Compute CIE-XYZ-1931 color space values
 #'
-#' @param spectra
-#' @param str_wavelength
-#' @param R
-#' @param cmf2
-#' @param K
+#' @param spectrum spectral power distribution of light source per wavelength
+#' @param wavelength array in nm corresponding to spectrum
+#' @param cmf2 spectral sensitivity of CIE 2° colour matching functions
+#' @param K constant for standardization
+#' @param R spectral reflection factor
 #'
-#' @NoRd
+#' @noRd
 compute_XYZ_CIE1931 <- function(spectrum, wavelength, cmf2, K, R) {
   wl_diff <- mean(diff(wavelength))
   X_2 <- K * sum(spectrum * R * cmf2$x_cmf_2) * wl_diff

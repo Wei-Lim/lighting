@@ -7,7 +7,7 @@
 sensitivity_functions(wl_out = seq(380, 780, 1))
 }
 \arguments{
-\item{wl_step}{defines the wavelength interval. Wavelength range
+\item{wl_out}{defines the wavelength interval. Wavelength range
 (380-780)nm.}
 }
 \value{

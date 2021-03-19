@@ -21,7 +21,8 @@ Imports:
     Rdpack,
     dplyr,
     mathjaxr,
-    purrr
+    purrr,
+    rlang
 RdMacros:
     Rdpack,
     mathjaxr
