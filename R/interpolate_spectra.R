@@ -1,6 +1,7 @@
 #' Interpolates a dataframe of spectra with a wavelength column.
 #'
-#' Description
+#' This function provides the all recommended interpolation method for spectra.
+#' This includes linear, spline and sprague interpolation.
 #'
 #' In Details - Not tested for wavelength interval < 1 nm.
 #' Linear interpolating: extrapolation results into 0 values.

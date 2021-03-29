@@ -1,3 +1,14 @@
+#' Computes nonvisual quantities defined by CIE, DIN and IWBI
+#'
+#' @param spectrum spectral power distribution
+#' @param wavelength array in nm
+#' @param V_pho photopic luminosity function
+#' @param K_m luminous efficacy
+#' @param s_alpha spectral sensitivty functions for alpha-values
+#'
+#' @return nonvisual quantities
+#'
+#' @noRd
 compute_nonvisual_standards <- function(
   spectrum,
   wavelength,

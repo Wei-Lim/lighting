@@ -1,11 +1,11 @@
 Package: lighting
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
+Title: Lighting values computation tools
+Version: 1.0.0
 Author: William Truong
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Maintainer: William Truong <w.truong@pracht.com>
+Description: Provides computation tools to compute common lighting values and 
+    nonvisual lighting values recommended by different groups.
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true

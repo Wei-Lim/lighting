@@ -1,3 +1,12 @@
+#' Computes the Circadian Stimulus from Rea et al.
+#'
+#' @param spectrum spectral power distribution
+#' @param wavelength array in nm
+#' @param ssf spectral sensitivity functions
+#'
+#' @return
+#'
+#' @noRd
 compute_circadian_stimulus <- function (
   spectrum,
   wavelength,

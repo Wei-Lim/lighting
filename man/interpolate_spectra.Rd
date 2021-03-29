@@ -40,7 +40,8 @@ returns a dataframe of interpolated spectra in wide table format
   specified by \code{wl_out}.
 }
 \description{
-Description
+This function provides the all recommended interpolation method for spectra.
+This includes linear, spline and sprague interpolation.
 }
 \details{
 In Details - Not tested for wavelength interval < 1 nm.

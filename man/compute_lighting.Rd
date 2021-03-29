@@ -13,10 +13,67 @@ compute_lighting(spectra, str_wavelength = NULL)
 column is the wavelength column}
 }
 \value{
-dataframe of lighting values used in lighting
+dataframe of lighting values used in lighting.
 }
 \description{
-Computes lighting values from given spectra dataframe
+The following lighting values are implemented:
+\itemize{
+  \item{E_v: }{illuminance in lx}
+  \item{E^D65_sc,v: }{S-cone-opic equivalent daylight (D65) illuminance in lx
+  \insertCite{CIE2018b}{lighting}}
+  \item{E^D65_mc,v: }{M-cone-opic equivalent daylight (D65) illuminance in lx
+  \insertCite{CIE2018b}{lighting}}
+  \item{E^D65_lc,v: }{L-cone-opic equivalent daylight (D65) illuminance in lx
+  \insertCite{CIE2018b}{lighting}}
+  \item{E^D65_rh,v: }{rhodopic equivalent daylight (D65) illuminance in lx
+  \insertCite{CIE2018b}{lighting}}
+  \item{E^D65_mel,v: }{melanopic equivalent daylight (D65) illuminance in lx
+  \insertCite{CIE2018b}{lighting}}
+  \item{gamma^D65_sc,v: }{S-cone-opic daylight (D65) efficacy ratio
+  \insertCite{CIE2018b}{lighting}}
+  \item{gamma^D65_mc,v: }{M-cone-opic daylight (D65) efficacy ratio
+  \insertCite{CIE2018b}{lighting}}
+  \item{gamma^D65_lc,v: }{L-cone-opic daylight (D65) efficacy ratio
+  \insertCite{CIE2018b}{lighting}}
+  \item{gamma^D65_rh,v: }{rhodopic daylight (D65) efficacy ratio
+  \insertCite{CIE2018b}{lighting}}
+  \item{gamma^D65_mel,v: }{melanopic daylight (D65) efficacy ratio
+  \insertCite{CIE2018b}{lighting}}
+  \item{E_v,mel,D65: }{melanopic daylight equivalent illuminance  in lx
+  \insertCite{DIN2015}{lighting}}
+  \item{a_mel,v: }{melanopic factor of luminous radiation
+  \insertCite{DIN2015}{lighting}}
+  \item{EML: }{equivalent melanopic lux \insertCite{IWBI2019}{lighting}}
+  \item{R_mel,ratio: }{melanopic ratio \insertCite{IWBI2019}{lighting}}
+  \item{CCT: }{correlated colour temperature \insertCite{CIE2018b}{lighting}}
+  \item{R_a: }{color rendering index \insertCite{CIE1995}{lighting}}
+  \item{R_i: }{1-14 specific color rendering index
+  \insertCite{CIE1995}{lighting}}
+  \item{x_2: }{chromaticity coordinate CIE-XYZ-1931, 2° standard observer
+  \insertCite{CIE2018b}{lighting}}
+  \item{y_2: }{chromaticity coordinate CIE-XYZ-1931, 2° standard observer
+  \insertCite{CIE2018b}{lighting}}
+  \item{z_2: }{chromaticity coordinate CIE-XYZ-1931, 2° standard observer
+  \insertCite{CIE2018b}{lighting}}
+  \item{X_2: }{tristimulus value CIE-XYZ-1931, 2° standard observer
+  \insertCite{CIE2018b}{lighting}}
+  \item{Y_2: }{tristimulus value CIE-XYZ-1931, 2° standard observer
+  \insertCite{CIE2018b}{lighting}}
+  \item{Z_2: }{tristimulus value CIE-XYZ-1931, 2° standard observer
+  \insertCite{CIE2018b}{lighting}}
+  \item{u_prime: }{chromaticity coordinate CIE-UCS-1976
+  \insertCite{CIE2018b}{lighting}}
+  \item{v_prime: }{chromaticity coordinate CIE-UCS-1976
+  \insertCite{CIE2018b}{lighting}}
+  \item{E_sc: }{cyanopic illuminance \insertCite{Lucas2014}{lighting}}
+  \item{E_mc: }{chloropic illuminance \insertCite{Lucas2014}{lighting}}
+  \item{E_lc: }{erythropic illuminance \insertCite{Lucas2014}{lighting}}
+  \item{E_r: }{rhodopic illuminance \insertCite{Lucas2014}{lighting}}
+  \item{E_z: }{melanopic illuminance \insertCite{Lucas2014}{lighting}}
+  \item{CS: }{circadian stimulus \insertCite{Rea2018}{lighting}}
+  \item{CL_A: }{circadian light \insertCite{Rea2018}{lighting}}
+  \item{SV: }{blue-yellow spectral opponency \insertCite{Rea2018}{lighting}}
+}
 }
 \examples{
 wavelength <- seq(380, 780, 1)
@@ -29,4 +86,7 @@ spectra$EES <- 1
 compute_lighting(spectra)
 compute_lighting(spectra, "wavelength")
 
+}
+\references{
+\insertAllCited{}
 }
