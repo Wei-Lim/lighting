@@ -11,12 +11,10 @@ values of spectra.
 
 ## Installation
 
-You can install the released version of lighting from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("lighting")
-```
+<!-- You can install the released version of lighting from [CRAN](https://CRAN.R-project.org) with: -->
+<!-- ``` r -->
+<!-- install.packages("lighting") -->
+<!-- ``` -->
 
 And the development version from [GitHub](https://github.com/) with:
 
