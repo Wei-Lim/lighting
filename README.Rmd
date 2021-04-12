@@ -1,0 +1,58 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# lighting
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of lighting is to provide a function to calculate lighting values of
+spectra. 
+
+
+## Installation
+
+You can install the released version of lighting from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("lighting")
+```
+
+And the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("Wei-Lim/lighting")
+```
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(lighting)
+## basic example code
+# load or generate a absolute spectrum and creating a dataframe
+wavelength <- seq(380, 780, 1)
+df_spectra <- data.frame(wavelength)
+# generate equivalent energy spectrum
+df_spectra$EES <- 1
+# generate spectra of planckian radiator using body temperature in K
+df_spectra$P_5000 <- planck_law(5000, wavelength)
+
+
+# calculating lighting values
+compute_lighting(df_spectra)
+
+```

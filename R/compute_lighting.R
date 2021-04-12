@@ -115,6 +115,7 @@ compute_lighting <- function(
   lv <- data.frame()[1:length(lightsource),] %>%
     `rownames<-`(lightsource)
 
+
   # illuminance computation
   df <- spectra %>%
     map_df(
