@@ -22,7 +22,7 @@ You can install the development version of lighting from
 devtools::install_github("Wei-Lim/lighting")
 ```
 
-## Example
+## Examples
 
 ### Read LDT file
 

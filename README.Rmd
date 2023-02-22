@@ -32,7 +32,7 @@ You can install the development version of lighting from [GitHub](https://github
 devtools::install_github("Wei-Lim/lighting")
 ```
 
-## Example
+## Examples
 
 ### Read LDT file
 
@@ -58,6 +58,7 @@ Plots a typical light distribution data.
 plot_light_distribution(ld_list$lum_int_extended_tbl)
 ```
 </p>
+
 ### Write LDT, convert to IES and export to SVG
 ```{r eval=FALSE}
 # Write LDT 
