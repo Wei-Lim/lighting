@@ -2,13 +2,13 @@
 
 # 1.0 EXTRACTING LDT ----
 
-#' Extracts Luminous Intensity LDT Data
+#' @title Extract luminous intensity data from a LDT-file into a tibble
 #'
-#' @description
+#' @description `extract_lum_intensity_ldt()` returns a tibble of luminous
+#' intensity data extracted from a LDT-file. The luminous intensities depends on
+#' C-plane and gamma angles.
 #'
-#' Extracts luminous intensity from LDT-file. It depends on the number of
-#' luminous intensities per C-plane and per gamma angle. Internal private
-#' function for iteration purposes.
+#' @details This function is used internally in the packages for iteration purposes.
 #'
 #' @param C A single C-plane value.
 #' @param i Counter for the unique C-plane values. Used for extracting the right
@@ -18,10 +18,10 @@
 #' @param Ng Number of luminous intensities in each C-plane.
 #' @param lines_data Lines with luminous intensity data from the LDT file.
 #'
+#' @returns A [tibble::tibble()] with luminous intensities, C-planes and gamma angles.
 #'
 #' @export
-extract_lum_intensity_ldt <-
-	function(C, i, gamma, Ng, lines_data) {
+extract_lum_intensity_ldt <- function(C, i, gamma, Ng, lines_data) {
 
 		I   <- lines_data[((i - 1) * Ng + 1):(i * Ng)] %>% as.numeric()
 
@@ -33,79 +33,18 @@ extract_lum_intensity_ldt <-
 
 # 1.1 READ LDT DATA ----
 
-#' Reads LDT Data
+#' @title Read a LDT-file into a specific light distribution list format
 #'
-#' @description
+#' @description `read_ldt()` is used to extract light distribution data of a
+#' LDT-file into a specific list format `ld_list` (for item description see [ld_data]).
 #'
-#' Reads light distribution data from LDT file. The data is stored in a specific
-#' list (ld_list) with light distribution data.
 #'
 #' @param file Path to LDT-file.
 #'
-#' @returns \code{ld_list}: Specific list for light distributions that can be
-#' used with all functions that have a prefix "ld_".
+#' @returns A specific light distribution list (`ld_list`), that can be
+#' used with all functions that have a prefix `ld_` (for list items description
+#' see [ld_data]).
 #'
-#' @details Returns a list (\code{ld_list}) with following items:
-#'
-#' \strong{Filepath}
-#' - \code{filepath}: Path to LDT-file
-#' - \code{file_name}: Name of LDT-file without extension
-#'
-#' \strong{
-#'   \href{https://docs.agi32.com/PhotometricToolbox/Content/Open_Tool/eulumdat_file_format.htm}{EULUMDAT}
-#'   (\href{https://de.wikipedia.org/wiki/EULUMDAT}{see German definitions})
-#' }
-#'
-#' - \code{company}: Company identification/databank/version/format identification
-#' - \code{Ityp}: Type indicator
-#' - \code{Isym}: Symmetry indicator
-#' - \code{Mc}: Number of C-planes between 0 and 360 degrees
-#' - \code{Dc}: Distance between C-planes
-#' - \code{Ng}: Number of luminous intensities in each C-plane
-#' - \code{Dg}: Distance between luminous intensities per C-plane
-#' - \code{report_no}: Measurement report number
-#' - \code{luminaire_name}: Luminaire name
-#' - \code{luminaire_no}: Luminaire number
-#' - \code{file_name_ldt}: File name written in LDT-file
-#' - \code{date_user}: Date/user
-#' - \code{length}: Length/diameter of luminaire (mm)
-#' - \code{width}: b - Width of luminaire (mm) (b = 0 for circular luminaire)
-#' - \code{height}: Height of luminaire (mm)
-#' - \code{length_lum}: Length/diameter of luminous area (mm)
-#' - \code{width_lum}: b1 - Width of luminous area (mm) (b1 = 0 for circular
-#' luminous area of luminaire)
-#' - \code{height_lum_C0}: Height of luminous area C0-plane (mm)
-#' - \code{height_lum_C90}: Height of luminous area C90-plane (mm)
-#' - \code{height_lum_C180}: Height of luminous area C180-plane (mm)
-#' - \code{height_lum_C270}: Height of luminous area C270-plane (mm)
-#' - \code{DFF}: Downward flux fraction (%)
-#' - \code{LORL}: Light output ratio luminaire (%)
-#' - \code{cf}: Conversion factor for luminous intensities (depending on measurement)
-#' - \code{tilt}: Tilt of luminaire during measurement (road lighting luminaires)
-#' - \code{lamp_standard_sets_no}: n - Number of standard sets of lamps
-#' (optional, #' also extendable on company-specific basis).#' For absolute
-#' photometry, this #' value is 1.
-#' - \code{lamp_no}: Number of lamps. For absolute photometry, number is
-#' negative.
-#' - \code{lamp_type}: Type of lamps
-#' - \code{lum_flux}: Total luminous flux of lamps (lm). For absolute
-#' photometry, this field is Total Luminous Flux of Luminaire.
-#' - \code{cct}: Color appearance / color temperature of lamps
-#' - \code{cri}: Color rendering group / color rendering index
-#' - \code{power}: Wattage including ballast (W)
-#' - \code{DR}: Direct ratios for room indices k = 0.6 ... 5 (for determination
-#' of luminaire numbers according to utilization factor method)
-#' - \code{angle_C}: Angles of C-planes (beginning with 0 degrees, horizontal)
-#' - \code{angle_G}: Gamma angles (beginning with 0 degrees, vertical)
-#' - \code{lum_int_tbl}: Luminous intensity tibble as a function of C-angle and
-#' G-angle. Dependent on light distribution symmetry (Isym)
-#' - \code{lum_int_extended_tbl}: Luminous intensity tibble extended by given C-
-#' and G-angles. For Plots, Calculation and Conversion.
-#'
-#' \strong{IES LM-63-02 additional definitons}
-#' - \code{test_lab}: Photometric testing laboratory
-#' - \code{photometry_type}: 1 = C, 2 = B, 3 = A
-#' - \code{ballast_factor}: Ballast factor (ballast efficiency)
 #'
 #' @examples
 #' library(tidyverse)
@@ -116,8 +55,7 @@ extract_lum_intensity_ldt <-
 #' read_ldt(file)
 #'
 #' @export
-read_ldt <-
-	function(file) {
+read_ldt <- function(file) {
 
 		# Read txt-lines
 		lines    <- readLines(file)
@@ -358,8 +296,143 @@ read_ldt <-
 				photometry_type = "1",
 
 				# ballast factor
-				ballast_factor = 1
+				ballast_factor = 1,
+
+				# placeholder for light distribution ggplot
+				plot = NA
 			))
 
 		return(ld_list)
 	}
+
+# 1.2 PLOT LIGHT DISTRIBUTION ----
+
+#' @title Plots a polar chart of a light distribution
+#'
+#' @description `plot_light_distribution()` returns a ggplot polar chart of a
+#' light distribution using the extended luminous intensity data, which are
+#' stored in a `ld_list`, like [ld_data].
+#'
+#' @param lum_int_extended_tbl A tibble of extended luminous intensity data
+#' @param line_color A Text in hex colour format
+#' @param line_size A numeric, which controls the line size of [ggplot2::geom_line()]
+#' @param title The text for the plot title
+#' @param x_lab The text for the x-axis label
+#' @param y_lab The text for the y-axis label
+#'
+#' @returns ggplot2 object with polar chart visualisation
+#'
+#' @examples
+#' plot_light_distribution(ld_data$lum_int_extended_tbl)
+#'
+#' @export
+plot_light_distribution <- function(
+		lum_int_extended_tbl,
+		line_color = "#BCCF03", # PRACHT green
+		line_size  = 1.5,
+		title      = "",
+		x_lab      = expression("Drehwinkel" ~ gamma ~ "in \u00b0"),
+		y_lab      = expression(paste("Normierte Lichtst\u00e4rke I in cd/1000 lm"))
+) {
+
+	C <- NULL
+
+	lum_int_extended_tbl %>%
+
+		# Data wrangling
+		tidyr::pivot_longer(-gamma, "C", names_prefix = "C", names_transform = as.numeric, values_to = "I") %>%
+		dplyr::filter(C == 0 | C == 90 | C == 180 | C == 270) %>%
+		dplyr::mutate(
+			gamma = dplyr::case_when(
+				# transform gamma for plotting
+				C == 0   | C == 90  ~ 360 - gamma,
+				C == 180 | C == 270 ~ gamma,
+			),
+			C = dplyr::case_when(
+				C == 0  | C == 180 ~ "C0/180",
+				C == 90 | C == 270 ~ "C90/270"
+			),
+			C = factor(C, levels = c("C0/180", "C90/270"))
+		) %>%
+
+		# Plotting
+		ggplot2::ggplot(ggplot2::aes(x = gamma, y = I, linetype = C)) +
+
+		# Create polar graph
+		ggplot2::geom_line(color = line_color, size = line_size) +
+		ggplot2::coord_polar(start = pi) +
+
+		# Define special x-axis for light distribution (see gamma transformation)
+		ggplot2::scale_x_continuous(
+			limits = c(0, 360),
+			breaks = seq(0, 330, 30),
+			labels = c("0", "30", "60", "90", "120", "150", "180", "150", "120", "90",
+					   "60", "30")
+		) +
+
+		# Themes and Labels
+		ggplot2::theme_light() +
+		ggplot2::theme(
+			plot.title         = ggplot2::element_text(size = 18),
+			panel.grid.minor   = ggplot2::element_line(size = 0.5),
+			panel.grid.major   = ggplot2::element_line(size = 0.5),
+			axis.text          = ggplot2::element_text(size = 12),
+			axis.title.y       = ggplot2::element_text(vjust = 4),
+			axis.title         = ggplot2::element_text(size = 16),
+			legend.text        = ggplot2::element_text(size = 12),
+			legend.title       = ggplot2::element_blank(),
+			legend.position    = "bottom",
+			legend.box.spacing = grid::unit(0, "mm")
+		) +
+		ggplot2::labs(
+			title = title,
+			x     = expression("Drehwinkel" ~ gamma ~ "in \u00b0"),
+			y     = expression(paste("Normierte Lichtst\u00e4rke I in cd/1000 lm"))
+		)
+}
+
+
+# 1.3 LD: ADD PLOT TO LD_LIST ----
+
+#' @title Adds plot polar chart into `ld_list`
+#'
+#' @description `ld_add_light_distribution()` adds the ggplot2 object from
+#' [plot_light_distribution()] into the light distribution list `ld_list`
+#' (for list items description see [ld_data]).
+#'
+#' @param ld_list A specific light distribution list
+#' @param line_color A Text in hex colour format
+#' @param line_size A numeric, which controls the line size of [ggplot2::geom_line()]
+#' @param title The text for the plot title
+#' @param x_lab The text for the x-axis label
+#' @param y_lab The text for the y-axis label
+#'
+#' @returns `ld_list`, like [ld_data]
+#'
+#' @examples
+#' plot_light_distribution(ld_data$lum_int_extended_tbl)
+#'
+#' @export
+ld_add_light_distribution <- function(
+		ld_list,
+		line_color = "#BCCF03",
+		line_size  = 1.5,
+		title      = "",
+		x_lab      = expression("Drehwinkel" ~ gamma ~ "in °"),
+		y_lab      = expression(paste("Normierte Lichtstärke I in cd/1000 lm"))
+) {
+
+	lum_int_extended_tbl <- ld_list$lum_int_extended_tbl
+
+	ld_list$plot <- plot_light_distribution(
+		lum_int_extended_tbl,
+		line_color = line_color,
+		line_size  = line_size,
+		title      = ld_list$file_name,
+		x_lab      = x_lab,
+		y_lab      = y_lab
+	)
+
+	return(ld_list)
+}
+

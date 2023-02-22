@@ -2,7 +2,7 @@
 % Please edit documentation in R/lighting_distribution.R
 \name{read_ldt}
 \alias{read_ldt}
-\title{Reads LDT Data}
+\title{Read a LDT-file into a specific light distribution list format}
 \usage{
 read_ldt(file)
 }
@@ -10,80 +10,13 @@ read_ldt(file)
 \item{file}{Path to LDT-file.}
 }
 \value{
-\code{ld_list}: Specific list for light distributions that can be
-used with all functions that have a prefix "ld_".
+A specific light distribution list (\code{ld_list}), that can be
+used with all functions that have a prefix \code{ld_} (for list items description
+see \link{ld_data}).
 }
 \description{
-Reads light distribution data from LDT file. The data is stored in a specific
-list (ld_list) with light distribution data.
-}
-\details{
-Returns a list (\code{ld_list}) with following items:
-
-\strong{Filepath}
-\itemize{
-\item \code{filepath}: Path to LDT-file
-\item \code{file_name}: Name of LDT-file without extension
-}
-
-\strong{
-\href{https://docs.agi32.com/PhotometricToolbox/Content/Open_Tool/eulumdat_file_format.htm}{EULUMDAT}
-(\href{https://de.wikipedia.org/wiki/EULUMDAT}{see German definitions})
-}
-\itemize{
-\item \code{company}: Company identification/databank/version/format identification
-\item \code{Ityp}: Type indicator
-\item \code{Isym}: Symmetry indicator
-\item \code{Mc}: Number of C-planes between 0 and 360 degrees
-\item \code{Dc}: Distance between C-planes
-\item \code{Ng}: Number of luminous intensities in each C-plane
-\item \code{Dg}: Distance between luminous intensities per C-plane
-\item \code{report_no}: Measurement report number
-\item \code{luminaire_name}: Luminaire name
-\item \code{luminaire_no}: Luminaire number
-\item \code{file_name_ldt}: File name written in LDT-file
-\item \code{date_user}: Date/user
-\item \code{length}: Length/diameter of luminaire (mm)
-\item \code{width}: b - Width of luminaire (mm) (b = 0 for circular luminaire)
-\item \code{height}: Height of luminaire (mm)
-\item \code{length_lum}: Length/diameter of luminous area (mm)
-\item \code{width_lum}: b1 - Width of luminous area (mm) (b1 = 0 for circular
-luminous area of luminaire)
-\item \code{height_lum_C0}: Height of luminous area C0-plane (mm)
-\item \code{height_lum_C90}: Height of luminous area C90-plane (mm)
-\item \code{height_lum_C180}: Height of luminous area C180-plane (mm)
-\item \code{height_lum_C270}: Height of luminous area C270-plane (mm)
-\item \code{DFF}: Downward flux fraction (\%)
-\item \code{LORL}: Light output ratio luminaire (\%)
-\item \code{cf}: Conversion factor for luminous intensities (depending on measurement)
-\item \code{tilt}: Tilt of luminaire during measurement (road lighting luminaires)
-\item \code{lamp_standard_sets_no}: n - Number of standard sets of lamps
-(optional, #' also extendable on company-specific basis).#' For absolute
-photometry, this #' value is 1.
-\item \code{lamp_no}: Number of lamps. For absolute photometry, number is
-negative.
-\item \code{lamp_type}: Type of lamps
-\item \code{lum_flux}: Total luminous flux of lamps (lm). For absolute
-photometry, this field is Total Luminous Flux of Luminaire.
-\item \code{cct}: Color appearance / color temperature of lamps
-\item \code{cri}: Color rendering group / color rendering index
-\item \code{power}: Wattage including ballast (W)
-\item \code{DR}: Direct ratios for room indices k = 0.6 ... 5 (for determination
-of luminaire numbers according to utilization factor method)
-\item \code{angle_C}: Angles of C-planes (beginning with 0 degrees, horizontal)
-\item \code{angle_G}: Gamma angles (beginning with 0 degrees, vertical)
-\item \code{lum_int_tbl}: Luminous intensity tibble as a function of C-angle and
-G-angle. Dependent on light distribution symmetry (Isym)
-\item \code{lum_int_extended_tbl}: Luminous intensity tibble extended by given C-
-and G-angles. For Plots, Calculation and Conversion.
-}
-
-\strong{IES LM-63-02 additional definitons}
-\itemize{
-\item \code{test_lab}: Photometric testing laboratory
-\item \code{photometry_type}: 1 = C, 2 = B, 3 = A
-\item \code{ballast_factor}: Ballast factor (ballast efficiency)
-}
+\code{read_ldt()} is used to extract light distribution data of a
+LDT-file into a specific list format \code{ld_list} (for item description see \link{ld_data}).
 }
 \examples{
 library(tidyverse)

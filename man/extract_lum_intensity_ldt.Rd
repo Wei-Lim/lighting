@@ -2,7 +2,7 @@
 % Please edit documentation in R/lighting_distribution.R
 \name{extract_lum_intensity_ldt}
 \alias{extract_lum_intensity_ldt}
-\title{Extracts Luminous Intensity LDT Data}
+\title{Extract luminous intensity data from a LDT-file into a tibble}
 \usage{
 extract_lum_intensity_ldt(C, i, gamma, Ng, lines_data)
 }
@@ -19,8 +19,14 @@ luminous intensity per gamma angle.}
 
 \item{lines_data}{Lines with luminous intensity data from the LDT file.}
 }
+\value{
+A \code{\link[tibble:tibble]{tibble::tibble()}} with luminous intensities, C-planes and gamma angles.
+}
 \description{
-Extracts luminous intensity from LDT-file. It depends on the number of
-luminous intensities per C-plane and per gamma angle. Internal private
-function for iteration purposes.
+\code{extract_lum_intensity_ldt()} returns a tibble of luminous
+intensity data extracted from a LDT-file. The luminous intensities depends on
+C-plane and gamma angles.
+}
+\details{
+This function is used internally in the packages for iteration purposes.
 }
