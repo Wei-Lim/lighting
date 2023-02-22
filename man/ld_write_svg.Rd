@@ -17,7 +17,7 @@ ld_write_svg(ld_list, dir_path)
 }
 \description{
 \code{ld_write_svg()} exports the ggplot2 object of the specific
-light distribution list \code{ld_list} as a SVG graphic file.
+light distribution list \code{ld_list} as a SVG graphic file (*.svg).
 }
 \examples{
 # ld_write_svg() will write the file to the current working directory, if

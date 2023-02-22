@@ -1,22 +1,24 @@
 Package: lighting
 Title: Lighting Tools
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("William", "Truong", , "willi.truong@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0002-9857-4437"))
 Description: Various tools used in the lighting industry. Reading, writing and plotting light distribution files *.ldt and *.ies. 
 License: CC BY 4.0
 Imports: 
-    magrittr,
-    rlang (>= 0.4.11),
-    tibble,
-    furrr,
+    data.table,    
     dplyr,
-    tidyr,
+    furrr,
     ggplot2,
-    svglite,
+    grDevices,
+    magrittr,
+    purrr,
+    rlang (>= 0.4.11),
     stringr,
-    grDevices
+    svglite,
+    tibble,
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,

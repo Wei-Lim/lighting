@@ -19,12 +19,12 @@ ld_write_ldt(ld_list, dir_path = "", user = "")
 }
 \description{
 \code{ld_write_ldt()} exports light distribution data (\code{ld_list}) as
-an EULUMDAT file (LDT).
+an EULUMDAT file (*.ldt).
 }
 \examples{
 # ld_write_ldt() will write the file to the current working directory, if
 # dir_path is unspecified.
 \dontrun{
-ld_write_ldt(ld_data, dir_path = "")
+ld_write_ldt(ld_data)
 }
 }

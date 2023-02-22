@@ -487,7 +487,7 @@ ld_write_svg <- function(ld_list, dir_path) {
 #' # ld_write_ldt() will write the file to the current working directory, if
 #' # dir_path is unspecified.
 #' \dontrun{
-#' ld_write_ldt(ld_data, dir_path = "")
+#' ld_write_ldt(ld_data)
 #' }
 #' @export
 ld_write_ldt <- function(ld_list, dir_path = "", user = "") {
@@ -532,3 +532,128 @@ ld_write_ldt <- function(ld_list, dir_path = "", user = "") {
 
 }
 
+# 1.6 LD: WRITE TO IES ----
+
+#' @title Write light distribution data (`ld_list`) to an IES file
+#'
+#' @description `ld_write_ies_lm63_2002()` exports light distribution data (`ld_list`)
+#' after ANSI/IESNA LM-63-2002 standard in IES file format (*.ies).
+#'
+#' @param ld_list A specific light distribution list
+#' @param dir_path The path to file directory. The filename will provided by
+#' `ld_list`, see [ld_data] for item descriptions.
+#'
+#' @returns `ld_write_ies_lm63_2002()` returns a NULL invisibly.
+#'
+#' @examples
+#' # ld_write_ies_lm63_2002() will write the file to the current working
+#' # directory, if dir_path is unspecified.
+#' \dontrun{
+#' ld_write_ies_lm63_2002(ld_data)
+#' }
+#' @export
+ld_write_ies_lm63_2002 <- function(ld_list, dir_path = "") {
+
+	C <- . <-  NULL
+
+	# Luminous intensity in long table format
+	lum_int_extended_long_dt <- ld_list$lum_int_extended_tbl %>%
+
+		# use of data.table for better computing speed in filtering and pivot_longer
+		data.table::setDT() %>%
+
+		# Pivot longer
+		data.table::melt(
+			measure.vars  = data.table:::patterns("C"),
+			variable.name = "C",
+			value.name    = "I"
+		)
+
+	# Removing prefix from variable "C" names
+	lum_int_extended_long_dt[, C := stringr::str_remove(C, "C")]
+
+	# TILT: Marker for end of keywords
+	tilt <- "TILT=NONE"
+
+	# * Data descriptions ----
+	lamp_no             <- ld_list$lamp_no
+	lumens_per_lamp     <- ld_list$lum_flux / lamp_no
+	candela_multiplier  <- ld_list$LORL / 100
+	angle_vertical_no   <- ld_list$lum_int_extended_tbl %>% nrow()
+	angle_horizontal_no <- ld_list$lum_int_extended_tbl %>% dplyr::select(-gamma) %>% ncol()
+	photometric_type    <- ld_list$photometry_type
+
+	# units_type: luminous dimensions in feet (1) or in meters (2)
+	units_type <- 2
+	width_lum  <- ld_list$width_lum
+	length_lum <- ld_list$length_lum
+	height_lum <- ld_list$height_lum_C0
+
+	ballast_factor   <- ld_list$ballast_factor
+	future_use       <- "1"
+	input_watts      <- ld_list$power
+	angle_vertical   <- ld_list$lum_int_extended_tbl$gamma
+	angle_horizontal <- lum_int_extended_long_dt %>%
+		dplyr::distinct(C) %>%
+		dplyr::pull(C)
+
+	candela_values <- angle_horizontal %>%
+		purrr::map_chr( function(x) {
+			lum_int_extended_long_dt[C == x, .(I)][[1]] %>%
+				stringr::str_c(collapse = " ")
+		})
+
+	# * Checks ----
+
+	# Tilted luminaire definition
+	# Note: conversion to TILT= INCLUDE is not implemented
+	if (ld_list$tilt != 0) tilt <- "TILT=INCLUDE"
+
+	# Absolute photometry
+	if (ld_list$lamp_no == "-1") lumens_per_lamp <- lamp_no
+
+	# Dimensions luminous shape
+
+	# Circular or vertical cylindrical
+	if (ld_list$width_lum == 0) {
+		width_lum  <- -ld_list$length_lum
+		length_lum <- -ld_list$length_lum
+	}
+
+	# Luminous height definition
+	# Not entirely correct solution
+	if ( ld_list$height_lum_C0   != 0 | ld_list$height_lum_C90  != 0 |
+		 ld_list$height_lum_C180 != 0 | ld_list$height_lum_C270 != 0 ) {
+		height_lum <- max(ld_list$height_lum_C0, ld_list$height_lum_C90, ld_list$height_lum_C180, ld_list$height_lum_C270)
+	}
+
+	ies_export_chr <- c(
+
+		# First line distinguishes from other ies-formats
+		"IESNA:LM-63-2002",
+
+		# * Keywords ----
+		stringr::str_c("[TEST]",      ld_list$report_no, sep = " "),
+		stringr::str_c("[TESTLAB]",   ld_list$test_lab, sep = " "),
+		stringr::str_c("[ISSUEDATE]", Sys.time() %>% format("%Y-%m-%d"), sep = " "),
+		stringr::str_c("[MANUFAC]",   ld_list$company, sep = " "),
+		stringr::str_c("[LUMCAT]",    ld_list$luminaire_no, sep = " "),
+		stringr::str_c("[LUMINAIRE]", ld_list$luminaire_name, sep = " "),
+		"[FILEGENINFO] created by R package lighting",
+
+		tilt,
+		# End of keywords
+
+		stringr::str_c(lamp_no, lumens_per_lamp, candela_multiplier,
+			  angle_vertical_no, angle_horizontal_no, photometric_type,
+			  units_type, width_lum, length_lum, height_lum, sep = " "),
+		stringr::str_c(ballast_factor, future_use, input_watts, sep = " "),
+		stringr::str_c(angle_vertical, collapse = " "),
+		stringr::str_c(angle_horizontal, collapse = " "),
+		candela_values
+	)
+
+	writeLines(ies_export_chr, stringr::str_c(dir_path, ld_list$file_name, ".ies"))
+
+	return(invisible(NULL))
+}
