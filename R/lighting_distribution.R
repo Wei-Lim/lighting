@@ -442,7 +442,7 @@ ld_add_light_distribution <- function(
 #' @title Write a `ld_list` polar chart to a SVG file
 #'
 #' @description `ld_write_svg()` exports the ggplot2 object of the specific
-#' light distritbution list `ld_list` as a SVG graphic file.
+#' light distribution list `ld_list` as a SVG graphic file (*.svg).
 #'
 #' @param ld_list A specific light distribution list
 #' @param dir_path The path to file directory. The filename will provided by
@@ -451,8 +451,8 @@ ld_add_light_distribution <- function(
 #' @returns `ld_write_svg()` returns the ggplot2 object invisibly.
 #'
 #' @examples
-#' # If only a file name is specified, ld_write_svg() will write
-#' # the file to the current working directory.
+#' # ld_write_svg() will write the file to the current working directory, if
+#' # dir_path is unspecified.
 #' \dontrun{
 #' ld_write_svg(ld_data, dir_path = "")
 #' }
@@ -467,3 +467,68 @@ ld_write_svg <- function(ld_list, dir_path) {
 
 	return(invisible(NULL))
 }
+
+
+# 1.5 LD: WRITE TO LDT ----
+
+#' @title Write light distribution data (`ld_list`) to a LDT file
+#'
+#' @description `ld_write_ldt()` exports light distribution data (`ld_list`) as
+#' an EULUMDAT file (*.ldt).
+#'
+#' @param ld_list A specific light distribution list
+#' @param dir_path The path to file directory. The filename will provided by
+#' `ld_list`, see [ld_data] for item descriptions.
+#' @param user The text naming the user, who manipulated the LDT-file
+#'
+#' @returns `ld_write_ldt()` returns a NULL invisibly.
+#'
+#' @examples
+#' # ld_write_ldt() will write the file to the current working directory, if
+#' # dir_path is unspecified.
+#' \dontrun{
+#' ld_write_ldt(ld_data, dir_path = "")
+#' }
+#' @export
+ld_write_ldt <- function(ld_list, dir_path = "", user = "") {
+
+	C <- NULL
+
+	ld_list$file_name_ldt <- stringr::str_c(ld_list$file_name, ".ldt")
+	ld_list$date_user <- stringr::str_c( Sys.time() %>% format("%Y-%m-%d"), user, sep = ", " )
+
+	# Select ldt header features
+	ldt_header <- c(
+		"company", "Ityp", "Isym", "Mc", "Dc", "Ng", "Dg",
+		"report_no", "luminaire_name", "luminaire_no", "file_name_ldt", "date_user",
+		"length", "width", "height",
+		"length_lum", "width_lum", "height_lum_C0", "height_lum_C90", "height_lum_C180", "height_lum_C270",
+		"DFF", "LORL", "cf", "tilt",
+		"lamp_standard_sets_no", "lamp_no", "lamp_type",
+		"lum_flux", "cct", "cri", "power"
+	)
+
+	# Convert to character array for writing lines
+	ldt_export_chr <- c(
+		ld_list[ldt_header] %>% as.character(),
+		ld_list$DR,
+		ld_list$angleC,
+		ld_list$angleG,
+		ld_list$lum_int_tbl %>%
+			tidyr::pivot_longer(
+				data            = -gamma,
+				cols            = "C",
+				names_prefix    = "C",
+				names_transform = as.numeric,
+				values_to       = "I"
+			) %>%
+			dplyr::arrange(C) %>%
+			dplyr::pull(I)
+	)
+
+	writeLines(ldt_export_chr, stringr::str_c(dir_path, ld_list$file_name, ".ldt"))
+
+	return(invisible(NULL))
+
+}
+
