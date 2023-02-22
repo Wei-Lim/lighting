@@ -314,13 +314,13 @@ read_ldt <- function(file) {
 #' stored in a `ld_list`, like [ld_data].
 #'
 #' @param lum_int_extended_tbl A tibble of extended luminous intensity data
-#' @param line_color A Text in hex colour format
+#' @param line_color A text in hex colour format
 #' @param line_size A numeric, which controls the line size of [ggplot2::geom_line()]
 #' @param title The text for the plot title
 #' @param x_lab The text for the x-axis label
 #' @param y_lab The text for the y-axis label
 #'
-#' @returns ggplot2 object with polar chart visualisation
+#' @returns A ggplot2 object with polar chart visualisation
 #'
 #' @examples
 #' plot_light_distribution(ld_data$lum_int_extended_tbl)
@@ -401,16 +401,16 @@ plot_light_distribution <- function(
 #' (for list items description see [ld_data]).
 #'
 #' @param ld_list A specific light distribution list
-#' @param line_color A Text in hex colour format
+#' @param line_color A text in hex colour format
 #' @param line_size A numeric, which controls the line size of [ggplot2::geom_line()]
 #' @param title The text for the plot title
 #' @param x_lab The text for the x-axis label
 #' @param y_lab The text for the y-axis label
 #'
-#' @returns `ld_list`, like [ld_data]
+#' @returns A `ld_list`, like [ld_data]
 #'
 #' @examples
-#' plot_light_distribution(ld_data$lum_int_extended_tbl)
+#' ld_add_light_distribution(ld_data)
 #'
 #' @export
 ld_add_light_distribution <- function(
@@ -418,8 +418,8 @@ ld_add_light_distribution <- function(
 		line_color = "#BCCF03",
 		line_size  = 1.5,
 		title      = "",
-		x_lab      = expression("Drehwinkel" ~ gamma ~ "in °"),
-		y_lab      = expression(paste("Normierte Lichtstärke I in cd/1000 lm"))
+		x_lab      = expression("Drehwinkel" ~ gamma ~ "in \u00b0"),
+		y_lab      = expression(paste("Normierte Lichtst\u00e4rke I in cd/1000 lm"))
 ) {
 
 	lum_int_extended_tbl <- ld_list$lum_int_extended_tbl
@@ -436,3 +436,34 @@ ld_add_light_distribution <- function(
 	return(ld_list)
 }
 
+
+# 1.4 LD: WRITE TO SVG ----
+
+#' @title Write a `ld_list` polar chart to a SVG file
+#'
+#' @description `ld_write_svg()` exports the ggplot2 object of the specific
+#' light distritbution list `ld_list` as a SVG graphic file.
+#'
+#' @param ld_list A specific light distribution list
+#' @param dir_path The path to file directory. The filename will provided by
+#' `ld_list`, see [ld_data] for item descriptions.
+#'
+#' @returns `ld_write_svg()` returns the ggplot2 object invisibly.
+#'
+#' @examples
+#' # If only a file name is specified, ld_write_svg() will write
+#' # the file to the current working directory.
+#' \dontrun{
+#' ld_write_svg(ld_data, dir_path = "")
+#' }
+#' @export
+ld_write_svg <- function(ld_list, dir_path) {
+
+	file_name <- ld_list$file_name
+
+	svglite::svglite(stringr::str_c(dir_path, file_name, ".svg"))
+	print(ld_list$plot)
+	grDevices::dev.off()
+
+	return(invisible(NULL))
+}

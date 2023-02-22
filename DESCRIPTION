@@ -13,7 +13,10 @@ Imports:
     furrr,
     dplyr,
     tidyr,
-    ggplot2
+    ggplot2,
+    svglite,
+    stringr,
+    grDevices
 Suggests: 
     knitr,
     rmarkdown,
