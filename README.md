@@ -186,14 +186,12 @@ ld_list
 ### Plot light distribution (polar chart)
 
 Plots a typical light distribution data.
-<p>
 
 ``` r
 plot_light_distribution(ld_list$lum_int_extended_tbl)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.jpeg" width="100%" />
-</p>
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
 ### Write LDT, convert to IES and export to SVG
 

@@ -1,7 +1,6 @@
 ---
 output: 
-  github_document:
-    dev: jpeg
+  github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -55,11 +54,9 @@ ld_list
 ### Plot light distribution (polar chart)
 
 Plots a typical light distribution data.
-<p>
 ```{r}
 plot_light_distribution(ld_list$lum_int_extended_tbl)
 ```
-</p>
 
 ### Write LDT, convert to IES and export to SVG
 ```{r eval=FALSE}
