@@ -36,6 +36,11 @@ stored in a \code{ld_list}, like \link{ld_data}.
 }
 \examples{
 plot_light_distribution(ld_data$lum_int_extended_tbl)
-plot_light_distribution(ld_data$lum_int_extended_tbl, title = "Test title", x_lab = "x-axis", y_lab = "y-axis")
+plot_light_distribution(
+  ld_data$lum_int_extended_tbl,
+  title = "Test title",
+  x_lab = "x-axis",
+  y_lab = "y-axis"
+)
 
 }
