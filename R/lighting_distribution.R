@@ -324,6 +324,7 @@ read_ldt <- function(file) {
 #'
 #' @examples
 #' plot_light_distribution(ld_data$lum_int_extended_tbl)
+#' plot_light_distribution(ld_data$lum_int_extended_tbl, title = "Test title", x_lab = "x-axis", y_lab = "y-axis")
 #'
 #' @export
 plot_light_distribution <- function(
@@ -331,8 +332,8 @@ plot_light_distribution <- function(
 		line_color = "#BCCF03", # PRACHT green
 		line_size  = 1.5,
 		title      = "",
-		x_lab      = expression("Drehwinkel" ~ gamma ~ "in \u00b0"),
-		y_lab      = expression(paste("Normierte Lichtst\u00e4rke I in cd/1000 lm"))
+		x_lab      = expression(gamma ~ "[\u00b0]"),
+		y_lab      = expression("I [cd/1000 lm]")
 ) {
 
 	C <- NULL
@@ -386,8 +387,8 @@ plot_light_distribution <- function(
 		) +
 		ggplot2::labs(
 			title = title,
-			x     = expression("Drehwinkel" ~ gamma ~ "in \u00b0"),
-			y     = expression(paste("Normierte Lichtst\u00e4rke I in cd/1000 lm"))
+			x     = x_lab,
+			y     = y_lab
 		)
 }
 
@@ -418,8 +419,8 @@ ld_add_light_distribution <- function(
 		line_color = "#BCCF03",
 		line_size  = 1.5,
 		title      = "",
-		x_lab      = expression("Drehwinkel" ~ gamma ~ "in \u00b0"),
-		y_lab      = expression(paste("Normierte Lichtst\u00e4rke I in cd/1000 lm"))
+		x_lab      = expression(gamma ~ "[\u00b0]"),
+		y_lab      = expression("I [cd/1000 lm]")
 ) {
 
 	lum_int_extended_tbl <- ld_list$lum_int_extended_tbl

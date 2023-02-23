@@ -9,8 +9,8 @@ ld_add_light_distribution(
   line_color = "#BCCF03",
   line_size = 1.5,
   title = "",
-  x_lab = expression("Drehwinkel" ~ gamma ~ "in °"),
-  y_lab = expression(paste("Normierte Lichtstärke I in cd/1000 lm"))
+  x_lab = expression(gamma ~ "[°]"),
+  y_lab = expression("I [cd/1000 lm]")
 )
 }
 \arguments{
