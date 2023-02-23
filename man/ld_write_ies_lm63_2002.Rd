@@ -4,13 +4,12 @@
 \alias{ld_write_ies_lm63_2002}
 \title{Write light distribution data (\code{ld_list}) to an IES file}
 \usage{
-ld_write_ies_lm63_2002(ld_list, dir_path = "")
+ld_write_ies_lm63_2002(ld_list, file = "test")
 }
 \arguments{
 \item{ld_list}{A specific light distribution list}
 
-\item{dir_path}{The path to file directory. The filename will provided by
-\code{ld_list}, see \link{ld_data} for item descriptions.}
+\item{file}{The path to file without extension.}
 }
 \value{
 \code{ld_write_ies_lm63_2002()} returns a NULL invisibly.
@@ -21,8 +20,8 @@ after ANSI/IESNA LM-63-2002 standard in IES file format (*.ies).
 }
 \examples{
 # ld_write_ies_lm63_2002() will write the file to the current working
-# directory, if dir_path is unspecified.
+# directory, if it is unspecified without directory path.
 \dontrun{
-ld_write_ies_lm63_2002(ld_data)
+ld_write_ies_lm63_2002(ld_data, file = "test")
 }
 }

@@ -445,23 +445,22 @@ ld_add_light_distribution <- function(
 #' light distribution list `ld_list` as a SVG graphic file (*.svg).
 #'
 #' @param ld_list A specific light distribution list
-#' @param dir_path The path to file directory. The filename will provided by
-#' `ld_list`, see [ld_data] for item descriptions.
+#' @param file The path to file without extension.
 #'
 #' @returns `ld_write_svg()` returns the ggplot2 object invisibly.
 #'
 #' @examples
+#' ld_data$plot <- ld_data %>% ld_add_light_distribution()
+#'
 #' # ld_write_svg() will write the file to the current working directory, if
-#' # dir_path is unspecified.
+#' # it is unspecified without directory path.
 #' \dontrun{
-#' ld_write_svg(ld_data, dir_path = "")
+#' ld_write_svg(ld_data, file = "test")
 #' }
 #' @export
-ld_write_svg <- function(ld_list, dir_path) {
+ld_write_svg <- function(ld_list, file) {
 
-	file_name <- ld_list$file_name
-
-	svglite::svglite(stringr::str_c(dir_path, file_name, ".svg"))
+	svglite::svglite(stringr::str_c(file, ".svg"))
 	print(ld_list$plot)
 	grDevices::dev.off()
 
@@ -477,20 +476,19 @@ ld_write_svg <- function(ld_list, dir_path) {
 #' an EULUMDAT file (*.ldt).
 #'
 #' @param ld_list A specific light distribution list
-#' @param dir_path The path to file directory. The filename will provided by
-#' `ld_list`, see [ld_data] for item descriptions.
+#' @param file The path to file without extension.
 #' @param user The text naming the user, who manipulated the LDT-file
 #'
 #' @returns `ld_write_ldt()` returns a NULL invisibly.
 #'
 #' @examples
 #' # ld_write_ldt() will write the file to the current working directory, if
-#' # dir_path is unspecified.
+#' # it is unspecified without directory path.
 #' \dontrun{
-#' ld_write_ldt(ld_data)
+#' ld_write_ldt(ld_data, file = "test")
 #' }
 #' @export
-ld_write_ldt <- function(ld_list, dir_path = "", user = "") {
+ld_write_ldt <- function(ld_list, file, user = "") {
 
 	C <- NULL
 
@@ -516,9 +514,10 @@ ld_write_ldt <- function(ld_list, dir_path = "", user = "") {
 		ld_list$angleG,
 		ld_list$lum_int_tbl %>%
 			tidyr::pivot_longer(
-				data            = -gamma,
-				cols            = "C",
+				# data            = -gamma,
+				cols            = dplyr::starts_with("C"),
 				names_prefix    = "C",
+				names_to        = "C",
 				names_transform = as.numeric,
 				values_to       = "I"
 			) %>%
@@ -526,7 +525,7 @@ ld_write_ldt <- function(ld_list, dir_path = "", user = "") {
 			dplyr::pull(I)
 	)
 
-	writeLines(ldt_export_chr, stringr::str_c(dir_path, ld_list$file_name, ".ldt"))
+	writeLines(ldt_export_chr, stringr::str_c(file, ".ldt"))
 
 	return(invisible(NULL))
 
@@ -540,34 +539,31 @@ ld_write_ldt <- function(ld_list, dir_path = "", user = "") {
 #' after ANSI/IESNA LM-63-2002 standard in IES file format (*.ies).
 #'
 #' @param ld_list A specific light distribution list
-#' @param dir_path The path to file directory. The filename will provided by
-#' `ld_list`, see [ld_data] for item descriptions.
+#' @param file The path to file without extension.
 #'
 #' @returns `ld_write_ies_lm63_2002()` returns a NULL invisibly.
 #'
 #' @examples
 #' # ld_write_ies_lm63_2002() will write the file to the current working
-#' # directory, if dir_path is unspecified.
+#' # directory, if it is unspecified without directory path.
 #' \dontrun{
-#' ld_write_ies_lm63_2002(ld_data)
+#' ld_write_ies_lm63_2002(ld_data, file = "test")
 #' }
 #' @export
-ld_write_ies_lm63_2002 <- function(ld_list, dir_path = "") {
+ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 
 	C <- . <-  NULL
 
+	# Set up data table
+	lum_int_extended_dt <- data.table::setDT(ld_list$lum_int_extended_tbl)
+
 	# Luminous intensity in long table format
-	lum_int_extended_long_dt <- ld_list$lum_int_extended_tbl %>%
-
-		# use of data.table for better computing speed in filtering and pivot_longer
-		data.table::setDT() %>%
-
-		# Pivot longer
-		data.table::melt(
-			measure.vars  = data.table:::patterns("C"),
-			variable.name = "C",
-			value.name    = "I"
-		)
+	lum_int_extended_long_dt <- data.table::melt(
+		data          = lum_int_extended_dt,
+		measure.vars  = data.table:::patterns("^C", cols = names(lum_int_extended_dt)),
+		variable.name = "C",
+		value.name    = "I"
+	)
 
 	# Removing prefix from variable "C" names
 	lum_int_extended_long_dt[, C := stringr::str_remove(C, "C")]
@@ -653,7 +649,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, dir_path = "") {
 		candela_values
 	)
 
-	writeLines(ies_export_chr, stringr::str_c(dir_path, ld_list$file_name, ".ies"))
+	writeLines(ies_export_chr, stringr::str_c(file, ".ies"))
 
 	return(invisible(NULL))
 }
