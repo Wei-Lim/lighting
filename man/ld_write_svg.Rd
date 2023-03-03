@@ -19,7 +19,7 @@ ld_write_svg(ld_list, file)
 light distribution list \code{ld_list} as a SVG graphic file (*.svg).
 }
 \examples{
-ld_data$plot <- ld_data \%>\% ld_add_light_distribution()
+ld_data$plot <- ld_data \%>\% ld_add_light_distribution_plot()
 
 # ld_write_svg() will write the file to the current working directory, if
 # it is unspecified without directory path.

@@ -57,7 +57,7 @@ and G-angles. For Plots, Calculation and Conversion.}
 \item{photometry_type}{1 = C, 2 = B, 3 = A}
 \item{ballast_factor}{Ballast factor (ballast efficiency)}
 \item{plot}{Light distribution polar chart in ggplot2 format. After
-read_ldt() process, initally empty using \code{\link[=read_ldt]{read_ldt()}}. Added by using \code{\link[=ld_add_light_distribution]{ld_add_light_distribution()}}}
+read_ldt() process, initally empty using \code{\link[=read_ldt]{read_ldt()}}. Added by using \code{\link[=ld_add_light_distribution_plot]{ld_add_light_distribution_plot()}}}
 }
 }
 \usage{

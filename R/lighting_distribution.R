@@ -398,11 +398,11 @@ plot_light_distribution <- function(
 }
 
 
-# 1.3 LD: ADD PLOT TO LD_LIST ----
+# 1.3 LD: ADD LIGHT DISTRIBUTION PLOT ----
 
 #' @title Adds plot polar chart into `ld_list`
 #'
-#' @description `ld_add_light_distribution()` adds the ggplot2 object from
+#' @description `ld_add_light_distribution_plot()` adds the ggplot2 object from
 #' [plot_light_distribution()] into the light distribution list `ld_list`
 #' (for list items description see [ld_data]).
 #'
@@ -416,10 +416,10 @@ plot_light_distribution <- function(
 #' @returns A `ld_list`, like [ld_data]
 #'
 #' @examples
-#' ld_add_light_distribution(ld_data)
+#' ld_add_light_distribution_plot(ld_data)
 #'
 #' @export
-ld_add_light_distribution <- function(
+ld_add_light_distribution_plot <- function(
 		ld_list,
 		line_color = "#BCCF03",
 		line_size  = 1.5,
@@ -456,7 +456,7 @@ ld_add_light_distribution <- function(
 #' @returns `ld_write_svg()` returns the ggplot2 object invisibly.
 #'
 #' @examples
-#' ld_data$plot <- ld_data %>% ld_add_light_distribution()
+#' ld_data$plot <- ld_data %>% ld_add_light_distribution_plot()
 #'
 #' # ld_write_svg() will write the file to the current working directory, if
 #' # it is unspecified without directory path.
@@ -658,4 +658,96 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 	writeLines(ies_export_chr, stringr::str_c(file, ".ies"))
 
 	return(invisible(NULL))
+}
+
+
+# 1.6 LD: UPDATE LD_LIST ----
+
+#' @title Update light distribution list
+#'
+#' @description `ld_update()` changes configurable parameters in the light
+#' distribution data. The principal light distribution is not altered in the process.
+#'
+#' @param ld_list A specific light distribution list
+#' @param file_name Name of LDT-file without extension
+#' @param company Company identification/databank/version/format identification
+#' @param report_no Measurement report number
+#' @param luminaire_name Luminaire name
+#' @param luminaire_no Luminaire number
+#' @param date_user Date/user
+#' @param length Length/diameter of luminaire (mm)
+#' @param width b - Width of luminaire (mm) (b = 0 for circular luminaire)
+#' @param height Height of luminaire (mm)
+#' @param length_lum Length/diameter of luminous area (mm)
+#' @param width_lum b1 - Width of luminous area (mm) (b1 = 0 for circular luminous area of luminaire)
+#' @param height_lum_C0 Height of luminous area C0-plane (mm)
+#' @param height_lum_C90 Height of luminous area C90-plane (mm)
+#' @param height_lum_C180 Height of luminous area C180-plane (mm)
+#' @param height_lum_C270 Height of luminous area C270-plane (mm)
+#' @param lamp_no Number of lamps. For absolute photometry, number is
+#'   negative.
+#' @param lamp_type Type of lamps
+#' @param lum_flux Total luminous flux of lamps (lm). For absolute
+#'   photometry, this field is Total Luminous Flux of Luminaire.
+#' @param cct Color appearance / color temperature of lamps
+#' @param cri Color rendering group / color rendering index
+#' @param power Wattage including ballast (W)
+#'
+#' @returns `ld_update()` returns a light distribution list (ld_list)
+#'
+#' @examples
+#' # ld_write_ies_lm63_2002() will write the file to the current working
+#' # directory, if it is unspecified without directory path.
+#' \dontrun{
+#' ld_write_ies_lm63_2002(ld_data, file = "test")
+#' }
+#' @export
+ld_update <- function(
+		ld_list,
+		file_name       = NA,
+		company         = NA,
+		report_no       = NA,
+		luminaire_name  = NA,
+		luminaire_no    = NA,
+		date_user       = NA,
+		length          = NA,
+		width           = NA,
+		height          = NA,
+		length_lum      = NA,
+		width_lum       = NA,
+		height_lum_C0   = NA,
+		height_lum_C90  = NA,
+		height_lum_C180 = NA,
+		height_lum_C270 = NA,
+		lamp_no         = NA,
+		lamp_type       = NA,
+		lum_flux        = NA,
+		cct             = NA,
+		cri             = NA,
+		power           = NA
+) {
+
+	if (!is.na(file_name))       ld_list$file_name       <- file_name
+	if (!is.na(company))         ld_list$company         <- company
+	if (!is.na(report_no))       ld_list$report_no       <- report_no
+	if (!is.na(luminaire_name))  ld_list$luminaire_name  <- luminaire_name
+	if (!is.na(luminaire_no))    ld_list$luminaire_no    <- luminaire_no
+	if (!is.na(date_user))       ld_list$date_user       <- date_user
+	if (!is.na(length))          ld_list$length          <- length
+	if (!is.na(width))           ld_list$width           <- width
+	if (!is.na(height))          ld_list$height          <- height
+	if (!is.na(length_lum))      ld_list$length_lum      <- length_lum
+	if (!is.na(width_lum))       ld_list$width_lum       <- width_lum
+	if (!is.na(height_lum_C0))   ld_list$height_lum_C0   <- height_lum_C0
+	if (!is.na(height_lum_C90))  ld_list$height_lum_C90  <- height_lum_C90
+	if (!is.na(height_lum_C180)) ld_list$height_lum_C180 <- height_lum_C180
+	if (!is.na(height_lum_C270)) ld_list$height_lum_C270 <- height_lum_C270
+	if (!is.na(lamp_no))         ld_list$lamp_no         <- lamp_no
+	if (!is.na(lamp_type))       ld_list$lamp_type       <- lamp_type
+	if (!is.na(lum_flux))        ld_list$lum_flux        <- lum_flux
+	if (!is.na(cct))             ld_list$cct             <- cct
+	if (!is.na(cri))             ld_list$cri             <- cri
+	if (!is.na(power))           ld_list$power           <- power
+
+	return(ld_list)
 }

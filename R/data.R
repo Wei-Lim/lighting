@@ -59,7 +59,7 @@
 #'   \item{photometry_type}{1 = C, 2 = B, 3 = A}
 #'   \item{ballast_factor}{Ballast factor (ballast efficiency)}
 #'   \item{plot}{Light distribution polar chart in ggplot2 format. After
-#'   read_ldt() process, initally empty using [read_ldt()]. Added by using [ld_add_light_distribution()]}
+#'   read_ldt() process, initally empty using [read_ldt()]. Added by using [ld_add_light_distribution_plot()]}
 #' }
 #'
 #'
