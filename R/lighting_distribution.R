@@ -696,11 +696,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 #' @returns `ld_update()` returns a light distribution list (ld_list)
 #'
 #' @examples
-#' # ld_write_ies_lm63_2002() will write the file to the current working
-#' # directory, if it is unspecified without directory path.
-#' \dontrun{
-#' ld_write_ies_lm63_2002(ld_data, file = "test")
-#' }
+#' ld_update(ld_data, file = "test")
 #' @export
 ld_update <- function(
 		ld_list,
