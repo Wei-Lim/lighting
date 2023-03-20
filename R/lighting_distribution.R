@@ -177,7 +177,6 @@ read_ldt <- function(file) {
 			DR       = header[33:42] %>% as.numeric()
 		)
 
-
 		## * Angles definitions ----
 		Mc   <- ld_list$Mc
 		Ng   <- ld_list$Ng
@@ -215,14 +214,27 @@ read_ldt <- function(file) {
 
 		# Luminous intensity distribution (cd/1000 lumens)
 		lum_int_tbl <- tibble::tibble(C, i) %>%
-			dplyr::mutate(tbl = furrr::future_map2(C, i, extract_lum_intensity_ldt, gamma = angle_G, Ng = Ng, lines_data = data)) %>%
+			dplyr::mutate(tbl = furrr::future_map2(
+				.x         = C,
+				.y         = i,
+				.f         = extract_lum_intensity_ldt,
+				gamma      = angle_G,
+				Ng         = Ng,
+				lines_data = data
+			)) %>%
 			dplyr::select(-C, -i) %>%
 			tidyr::unnest(tbl) %>%
 			tidyr::pivot_wider(names_from = C, names_prefix = "C", values_from = I)
 
 		## * Extend luminous intensity data for plotting and calculating ----
 		tbl <- lum_int_tbl %>%
-			tidyr::pivot_longer(-gamma, "C", names_prefix = "C", names_transform = as.numeric, values_to = "I")
+			tidyr::pivot_longer(
+				cols            = -gamma,
+				names_to        = "C",
+				names_prefix    = "C",
+				names_transform = as.numeric,
+				values_to       = "I"
+			)
 
 		switch(
 			Isym,
@@ -346,7 +358,13 @@ plot_light_distribution <- function(
 	lum_int_extended_tbl %>%
 
 		# Data wrangling
-		tidyr::pivot_longer(-gamma, "C", names_prefix = "C", names_transform = as.numeric, values_to = "I") %>%
+		tidyr::pivot_longer(
+			cols            = -gamma,
+			names_to        = "C",
+			names_prefix    = "C",
+			names_transform = as.numeric,
+			values_to       = "I"
+		) %>%
 		dplyr::filter(C == 0 | C == 90 | C == 180 | C == 270) %>%
 		dplyr::mutate(
 			gamma = dplyr::case_when(
