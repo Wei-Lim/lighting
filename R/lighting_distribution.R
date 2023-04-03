@@ -746,6 +746,7 @@ ld_update <- function(
 	if (!is.na(report_no))       ld_list$report_no       <- report_no
 	if (!is.na(luminaire_name))  ld_list$luminaire_name  <- luminaire_name
 	if (!is.na(luminaire_no))    ld_list$luminaire_no    <- luminaire_no
+	if (!is.na(file_name))       ld_list$file_name_ldt   <- paste0(file_name, ".ldt")
 	if (!is.na(date_user))       ld_list$date_user       <- date_user
 	if (!is.na(length))          ld_list$length          <- length
 	if (!is.na(width))           ld_list$width           <- width
