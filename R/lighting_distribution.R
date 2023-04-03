@@ -687,6 +687,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 #' distribution data. The principal light distribution is not altered in the process.
 #'
 #' @param ld_list A specific light distribution list
+#' @param filepath Filepath of imported original light distribution file
 #' @param file_name Name of LDT-file without extension
 #' @param company Company identification/databank/version/format identification
 #' @param report_no Measurement report number
@@ -718,6 +719,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 #' @export
 ld_update <- function(
 		ld_list,
+		filepath        = NA,
 		file_name       = NA,
 		company         = NA,
 		report_no       = NA,
@@ -741,6 +743,7 @@ ld_update <- function(
 		power           = NA
 ) {
 
+	if (!is.na(filepath))        ld_list$filepath        <- filepath
 	if (!is.na(file_name))       ld_list$file_name       <- file_name
 	if (!is.na(company))         ld_list$company         <- company
 	if (!is.na(report_no))       ld_list$report_no       <- report_no
