@@ -6,6 +6,7 @@
 \usage{
 ld_update(
   ld_list,
+  filepath = NA,
   file_name = NA,
   company = NA,
   report_no = NA,
@@ -31,6 +32,8 @@ ld_update(
 }
 \arguments{
 \item{ld_list}{A specific light distribution list}
+
+\item{filepath}{Filepath of imported original light distribution file}
 
 \item{file_name}{Name of LDT-file without extension}
 
