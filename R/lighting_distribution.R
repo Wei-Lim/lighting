@@ -501,7 +501,7 @@ ld_write_svg <- function(ld_list, file) {
 #'
 #' @param ld_list A specific light distribution list
 #' @param file The path to file without extension.
-#' @param user The text naming the user, who manipulated the LDT-file
+#' @param date_user The text naming date and user of LDT manipulation
 #'
 #' @returns `ld_write_ldt()` returns a NULL invisibly.
 #'
@@ -512,12 +512,12 @@ ld_write_svg <- function(ld_list, file) {
 #' ld_write_ldt(ld_data, file = "test")
 #' }
 #' @export
-ld_write_ldt <- function(ld_list, file, user = "") {
+ld_write_ldt <- function(ld_list, file, date_user = "") {
 
 	C <- NULL
 
 	ld_list$file_name_ldt <- stringr::str_c(ld_list$file_name, ".ldt")
-	ld_list$date_user <- stringr::str_c( Sys.time() %>% format("%Y-%m-%d"), user, sep = ", " )
+	ld_list$date_user <- date_user
 
 	# Select ldt header features
 	ldt_header <- c(

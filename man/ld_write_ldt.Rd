@@ -4,14 +4,14 @@
 \alias{ld_write_ldt}
 \title{Write light distribution data (\code{ld_list}) to a LDT file}
 \usage{
-ld_write_ldt(ld_list, file, user = "")
+ld_write_ldt(ld_list, file, date_user = "")
 }
 \arguments{
 \item{ld_list}{A specific light distribution list}
 
 \item{file}{The path to file without extension.}
 
-\item{user}{The text naming the user, who manipulated the LDT-file}
+\item{date_user}{The text naming date and user of LDT manipulation}
 }
 \value{
 \code{ld_write_ldt()} returns a NULL invisibly.
