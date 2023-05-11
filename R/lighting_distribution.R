@@ -511,7 +511,7 @@ ld_write_svg <- function(ld_list, file) {
 #' ld_write_ldt(ld_data, file = "test")
 #' }
 #' @export
-ld_write_ldt <- function(ld_list, file) {
+ld_write_ldt <- function(ld_list, file, useBytes = TRUE) {
 
 	C <- NULL
 
@@ -547,7 +547,7 @@ ld_write_ldt <- function(ld_list, file) {
 			dplyr::pull(I)
 	)
 
-	writeLines(ldt_export_chr, stringr::str_c(file, ".ldt"), useBytes = TRUE)
+	writeLines(ldt_export_chr, stringr::str_c(file, ".ldt"), useBytes = useBytes)
 
 	return(invisible(NULL))
 
