@@ -4,7 +4,7 @@
 \alias{ld_write_ldt}
 \title{Write light distribution data (\code{ld_list}) to a LDT file}
 \usage{
-ld_write_ldt(ld_list, file, useBytes = TRUE)
+ld_write_ldt(ld_list, file)
 }
 \arguments{
 \item{ld_list}{A specific light distribution list}

@@ -58,7 +58,7 @@ extract_lum_intensity_ldt <- function(C, i, gamma, Ng, lines_data) {
 read_ldt <- function(file) {
 
 		# Read txt-lines
-		lines    <- readLines(file, encoding = "UTF-8")
+		lines    <- read_lines(file)
 		header   <- lines[1:42]
 		data     <- lines[-(1:42)]
 
@@ -511,7 +511,7 @@ ld_write_svg <- function(ld_list, file) {
 #' ld_write_ldt(ld_data, file = "test")
 #' }
 #' @export
-ld_write_ldt <- function(ld_list, file, useBytes = TRUE) {
+ld_write_ldt <- function(ld_list, file) {
 
 	C <- NULL
 
@@ -547,7 +547,7 @@ ld_write_ldt <- function(ld_list, file, useBytes = TRUE) {
 			dplyr::pull(I)
 	)
 
-	writeLines(ldt_export_chr, stringr::str_c(file, ".ldt"), useBytes = useBytes)
+	write_lines(ldt_export_chr, stringr::str_c(file, ".ldt"))
 
 	return(invisible(NULL))
 
@@ -671,7 +671,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 		candela_values
 	)
 
-	writeLines(ies_export_chr, stringr::str_c(file, ".ies"), useBytes = TRUE)
+	write_lines(ies_export_chr, stringr::str_c(file, ".ies"))
 
 	return(invisible(NULL))
 }
