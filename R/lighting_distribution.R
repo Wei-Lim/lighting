@@ -486,8 +486,8 @@ ld_write_svg <- function(ld_list, file) {
 
 	svglite::svglite(
 		filename = stringr::str_c(file, ".svg"),
-		width    = 4,
-		height   = 4
+		width    = 8,
+		height   = 8
 	)
 	print(ld_list$plot)
 	grDevices::dev.off()
