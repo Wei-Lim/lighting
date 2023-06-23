@@ -484,7 +484,11 @@ ld_add_light_distribution_plot <- function(
 #' @export
 ld_write_svg <- function(ld_list, file) {
 
-	svglite::svglite(stringr::str_c(file, ".svg"))
+	svglite::svglite(
+		filename = stringr::str_c(file, ".svg"),
+		width    = 4,
+		height   = 4
+	)
 	print(ld_list$plot)
 	grDevices::dev.off()
 
