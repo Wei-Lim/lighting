@@ -347,7 +347,7 @@ read_ldt <- function(file) {
 plot_light_distribution <- function(
 		lum_int_extended_tbl,
 		line_color = "#BCCF03", # PRACHT green
-		line_size  = 1.5,
+		line_width = 1,
 		title      = "",
 		x_lab      = expression(gamma ~ "[\u00b0]"),
 		y_lab      = expression("I [cd/1000 lm]")
@@ -383,7 +383,7 @@ plot_light_distribution <- function(
 		ggplot2::ggplot(ggplot2::aes(x = gamma, y = I, linetype = C)) +
 
 		# Create polar graph
-		ggplot2::geom_line(color = line_color, size = line_size) +
+		ggplot2::geom_line(color = line_color, linewidth = line_width) +
 		ggplot2::coord_polar(start = pi) +
 
 		# Define special x-axis for light distribution (see gamma transformation)
@@ -393,6 +393,9 @@ plot_light_distribution <- function(
 			labels = c("0", "30", "60", "90", "120", "150", "180", "150", "120", "90",
 					   "60", "30")
 		) +
+
+		# Change linetype manually
+		ggplot2::scale_linetype_manual(values = c("solid", "dotted")) +
 
 		# Themes and Labels
 		ggplot2::theme_light() +
@@ -440,7 +443,7 @@ plot_light_distribution <- function(
 ld_add_light_distribution_plot <- function(
 		ld_list,
 		line_color = "#BCCF03",
-		line_size  = 1.5,
+		line_width  = 1,
 		title      = "",
 		x_lab      = expression(gamma ~ "[\u00b0]"),
 		y_lab      = expression("I [cd/1000 lm]")
@@ -451,7 +454,7 @@ ld_add_light_distribution_plot <- function(
 	ld_list$plot <- plot_light_distribution(
 		lum_int_extended_tbl,
 		line_color = line_color,
-		line_size  = line_size,
+		line_width = line_width,
 		title      = ld_list$file_name,
 		x_lab      = x_lab,
 		y_lab      = y_lab
