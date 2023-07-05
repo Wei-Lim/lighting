@@ -7,7 +7,7 @@
 plot_light_distribution(
   lum_int_extended_tbl,
   line_color = "#BCCF03",
-  line_size = 1.5,
+  line_width = 1,
   title = "",
   x_lab = expression(gamma ~ "[°]"),
   y_lab = expression("I [cd/1000 lm]")
@@ -18,13 +18,13 @@ plot_light_distribution(
 
 \item{line_color}{A text in hex colour format}
 
-\item{line_size}{A numeric, which controls the line size of \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}}
-
 \item{title}{The text for the plot title}
 
 \item{x_lab}{The text for the x-axis label}
 
 \item{y_lab}{The text for the y-axis label}
+
+\item{line_size}{A numeric, which controls the line size of \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}}
 }
 \value{
 A ggplot2 object with polar chart visualisation
