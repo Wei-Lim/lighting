@@ -232,7 +232,7 @@ read_ldt <- function(file) {
 				cols            = -gamma,
 				names_to        = "C",
 				names_prefix    = "C",
-				names_transform = as.numeric,
+				names_transform = list(C = as.numeric),
 				values_to       = "I"
 			)
 
