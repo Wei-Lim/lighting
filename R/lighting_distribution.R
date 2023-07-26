@@ -383,7 +383,7 @@ plot_light_distribution <- function(
 		ggplot2::ggplot(ggplot2::aes(x = gamma, y = I, linetype = C)) +
 
 		# Create polar graph
-		ggplot2::geom_line(color = line_color, linewidth = line_width) +
+		ggplot2::geom_line(color = line_color, size = line_width) +
 		ggplot2::coord_polar(start = pi) +
 
 		# Define special x-axis for light distribution (see gamma transformation)
@@ -395,7 +395,7 @@ plot_light_distribution <- function(
 		) +
 
 		# Change linetype manually
-		ggplot2::scale_linetype_manual(values = c("solid", "dotted")) +
+		ggplot2::scale_linetype_manual(values = c("solid", "11")) +
 
 		# Themes and Labels
 		ggplot2::theme_light() +
