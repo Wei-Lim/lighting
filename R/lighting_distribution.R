@@ -603,7 +603,9 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 	# * Data descriptions ----
 	lamp_no             <- ld_list$lamp_no
 	lumens_per_lamp     <- ld_list$lum_flux / lamp_no
-	candela_multiplier  <- ld_list$LORL / 100
+	# QUICKFIX: ldts are standardised in cd / 1000 lm.
+	# Using target light flux and 1000 lm you can get the candela multiplier
+	candela_multiplier  <- ld_list$LORL / 100 * ld_list$lum_flux / 1000
 	angle_vertical_no   <- ld_list$lum_int_extended_tbl %>% nrow()
 	angle_horizontal_no <- ld_list$lum_int_extended_tbl %>% dplyr::select(-gamma) %>% ncol()
 	photometric_type    <- ld_list$photometry_type
