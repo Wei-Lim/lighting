@@ -584,7 +584,12 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 	C <- . <-  NULL
 
 	# Set up data table
-	lum_int_extended_dt <- data.table::setDT(ld_list$lum_int_extended_tbl)
+	lum_int_extended_dt <- ld_list$lum_int_extended_tbl %>%
+
+		# Adding last horizontal angle 360°
+		mutate(C360 = C0) %>%
+
+		data.table::setDT()
 
 	# Luminous intensity in long table format
 	lum_int_extended_long_dt <- data.table::melt(
