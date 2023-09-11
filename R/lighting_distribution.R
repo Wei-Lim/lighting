@@ -612,9 +612,9 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 
 	# units_type: luminous dimensions in feet (1) or in meters (2)
 	units_type <- 2
-	width_lum  <- ld_list$width_lum
-	length_lum <- ld_list$length_lum
-	height_lum <- ld_list$height_lum_C0
+	width_lum  <- ld_list$width_lum / 1000
+	length_lum <- ld_list$length_lum / 1000
+	height_lum <- ld_list$height_lum_C0 / 1000
 
 	ballast_factor   <- ld_list$ballast_factor
 	future_use       <- "1"
@@ -643,15 +643,15 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 
 	# Circular or vertical cylindrical
 	if (ld_list$width_lum == 0) {
-		width_lum  <- -ld_list$length_lum
-		length_lum <- -ld_list$length_lum
+		width_lum  <- -ld_list$length_lum / 1000
+		length_lum <- -ld_list$length_lum / 1000
 	}
 
 	# Luminous height definition
 	# Not entirely correct solution
 	if ( ld_list$height_lum_C0   != 0 | ld_list$height_lum_C90  != 0 |
 		 ld_list$height_lum_C180 != 0 | ld_list$height_lum_C270 != 0 ) {
-		height_lum <- max(ld_list$height_lum_C0, ld_list$height_lum_C90, ld_list$height_lum_C180, ld_list$height_lum_C270)
+		height_lum <- max(ld_list$height_lum_C0, ld_list$height_lum_C90, ld_list$height_lum_C180, ld_list$height_lum_C270) / 1000
 	}
 
 	ies_export_chr <- c(
