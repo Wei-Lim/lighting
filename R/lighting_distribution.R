@@ -612,7 +612,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 	# Using target light flux and 1000 lm you can get the candela multiplier
 	candela_multiplier  <- ld_list$LORL / 100 * ld_list$lum_flux / 1000
 	angle_vertical_no   <- ld_list$lum_int_extended_tbl %>% nrow()
-	angle_horizontal_no <- ld_list$lum_int_extended_tbl %>% dplyr::select(-gamma) %>% ncol()
+	angle_horizontal_no <- ld_list$lum_int_extended_tbl %>% dplyr::select(-gamma) %>% ncol() + 1
 	photometric_type    <- ld_list$photometry_type
 
 	# units_type: luminous dimensions in feet (1) or in meters (2)
