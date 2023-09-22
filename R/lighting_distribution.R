@@ -679,7 +679,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 
 		stringr::str_c(lamp_no, lumens_per_lamp, candela_multiplier,
 			  angle_vertical_no, angle_horizontal_no, photometric_type,
-			  units_type, width_lum, length_lum, height_lum, sep = " "),
+			  units_type, length_lum, width_lum, height_lum, sep = " "),
 		stringr::str_c(ballast_factor, future_use, input_watts, sep = " "),
 		stringr::str_c(angle_vertical, collapse = " "),
 		stringr::str_c(angle_horizontal, collapse = " "),
