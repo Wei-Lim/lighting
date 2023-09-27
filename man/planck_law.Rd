@@ -7,7 +7,7 @@
 planck_law(wl, temperature)
 }
 \arguments{
-\item{wl}{wavelength vector of Planckian radiator in nm}
+\item{wl}{Wavelength vector of Planckian radiator in nm}
 
 \item{temperature}{A single temperature value of black body radiator in kelvin}
 }
@@ -15,7 +15,7 @@ planck_law(wl, temperature)
 spectral intensities of Planckian radiator
 }
 \description{
-plack_law() computes the spectral intensities of
+\code{plack_law()} computes the spectral intensities of
 a Planckian radiator with a defined temperature of the black body.
 }
 \examples{

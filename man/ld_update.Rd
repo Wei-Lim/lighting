@@ -87,5 +87,5 @@ photometry, this field is Total Luminous Flux of Luminaire.}
 distribution data. The principal light distribution is not altered in the process.
 }
 \examples{
-ld_update(ld_data, file = "test")
+ld_update(ld_data, company = "test company")
 }

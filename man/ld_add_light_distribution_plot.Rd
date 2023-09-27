@@ -18,13 +18,13 @@ ld_add_light_distribution_plot(
 
 \item{line_color}{A text in hex colour format}
 
+\item{line_width}{A numeric, which controls the line size of \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}}
+
 \item{title}{The text for the plot title}
 
 \item{x_lab}{The text for the x-axis label}
 
 \item{y_lab}{The text for the y-axis label}
-
-\item{line_size}{A numeric, which controls the line size of \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}}
 }
 \value{
 A \code{ld_list}, like \link{ld_data}

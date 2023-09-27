@@ -33,7 +33,9 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-RdMacros: Rdpack
+RdMacros: 
+    Rdpack,
+    mathjaxr
 URL: https://github.com/Wei-Lim/lighting
 BugReports: https://github.com/Wei-Lim/lighting/issues
 Depends: 
