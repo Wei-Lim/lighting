@@ -327,7 +327,7 @@ read_ldt <- function(file) {
 #'
 #' @param lum_int_extended_tbl A tibble of extended luminous intensity data
 #' @param line_color A text in hex colour format
-#' @param line_size A numeric, which controls the line size of [ggplot2::geom_line()]
+#' @param line_width A numeric, which controls the line size of [ggplot2::geom_line()]
 #' @param title The text for the plot title
 #' @param x_lab The text for the x-axis label
 #' @param y_lab The text for the y-axis label
@@ -429,7 +429,7 @@ plot_light_distribution <- function(
 #'
 #' @param ld_list A specific light distribution list
 #' @param line_color A text in hex colour format
-#' @param line_size A numeric, which controls the line size of [ggplot2::geom_line()]
+#' @param line_width A numeric, which controls the line size of [ggplot2::geom_line()]
 #' @param title The text for the plot title
 #' @param x_lab The text for the x-axis label
 #' @param y_lab The text for the y-axis label
@@ -582,13 +582,13 @@ ld_write_ldt <- function(ld_list, file) {
 #' @export
 ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 
-	C <- . <-  NULL
+	C <- . <- C0 <-  NULL
 
 	# Set up data table
 	lum_int_extended_dt <- ld_list$lum_int_extended_tbl %>%
 
 		# Adding last horizontal angle 360°
-		mutate(C360 = C0) %>%
+		dplyr::mutate(C360 = C0) %>%
 
 		data.table::setDT()
 
@@ -692,7 +692,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 }
 
 
-# 1.6 LD: UPDATE LD_LIST ----
+# 1.7 LD: UPDATE LD_LIST ----
 
 #' @title Update light distribution list
 #'
@@ -728,7 +728,7 @@ ld_write_ies_lm63_2002 <- function(ld_list, file = "test") {
 #' @returns `ld_update()` returns a light distribution list (ld_list)
 #'
 #' @examples
-#' ld_update(ld_data, file = "test")
+#' ld_update(ld_data, company = "test company")
 #' @export
 ld_update <- function(
 		ld_list,
