@@ -40,6 +40,7 @@ usethis::use_vignette("getting-started", title = "Getting Started with lighting"
 usethis::use_pipe()
 usethis::use_tidy_eval()
 usethis::use_tibble()
+usethis::use_data_table()
 
 # * Create a Function ----
 usethis::use_r("extract_lum_intensity_ldt")
@@ -51,7 +52,7 @@ usethis::use_data(telco_data)
 
 # * Tests ----
 usethis::use_testthat()
-usethis::use_test("blah")
+usethis::use_test("light_distribution")
 
 # * Pkgdown Website ----
 usethis::use_pkgdown()
