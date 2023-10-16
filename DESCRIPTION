@@ -4,7 +4,7 @@ Version: 0.2.0
 Authors@R: 
     person("William", "Truong", , "willi.truong@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0002-9857-4437"))
-Description: Various tools used in the lighting industry. Reading, writing and plotting light distribution files *.ldt and *.ies. 
+Description: Various tools used in the lighting industry. Reading, writing and plotting light distribution files *.ldt and *.ies. Computing common lighting values.
 License: CC BY 4.0
 Imports: 
     data.table,  

@@ -6,7 +6,7 @@
 \alias{lighting-package}
 \title{lighting: Lighting Tools}
 \description{
-Various tools used in the lighting industry. Reading, writing and plotting light distribution files *.ldt and *.ies.
+Various tools used in the lighting industry. Reading, writing and plotting light distribution files *.ldt and *.ies. Computing common lighting values.
 }
 \seealso{
 Useful links:
