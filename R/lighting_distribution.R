@@ -555,7 +555,11 @@ ld_write_ldt <- function(ld_list, file) {
 			dplyr::pull(I)
 	)
 
-	readr::write_lines(ldt_export_chr, stringr::str_c(file, ".ldt"))
+	readr::write_lines(
+		x    = ldt_export_chr,
+		file = stringr::str_c(file, ".ldt"),
+		sep  = "\r\n"
+	)
 
 	return(invisible(NULL))
 
